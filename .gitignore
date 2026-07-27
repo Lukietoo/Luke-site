@@ -1,0 +1,11 @@
+dist/
+node_modules/
+.astro/
+.DS_Store
+
+# Design reference bundle — kept local. Contains the proprietary .dc.html
+# runtime (support.js) and the 4000px original headshot.
+design_handoff_personal_site/
+
+# Local agent/editor tooling (machine-specific paths)
+.claude/

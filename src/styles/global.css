@@ -1,0 +1,95 @@
+/* Keyframes are verbatim from the handoff README. */
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeup {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes iconIn {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * 4.06em = 7 characters x (0.6em advance - 0.02em letter-spacing) for JetBrains
+ * Mono. If the name changes, recompute this width AND the steps() count in
+ * .title-type, or the reveal leaves dead space / clips.
+ */
+@keyframes typeIn {
+  from {
+    width: 0;
+  }
+  to {
+    width: 4.06em;
+  }
+}
+
+@keyframes softIn {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fxWhite {
+  0%,
+  30% {
+    opacity: 0;
+  }
+  72% {
+    opacity: 0.42;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+}
+
+a {
+  color: #1a1a1a;
+}
+
+a:hover {
+  color: #2a78d6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

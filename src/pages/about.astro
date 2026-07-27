@@ -1,0 +1,373 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import SocialIcon from '../components/SocialIcon.astro';
+import headshot from '../assets/headshot.png';
+import { links, copy } from '../config/site';
+
+const socials = [
+  { name: 'x', label: 'X', href: links.x, size: 17, delay: 260 },
+  { name: 'linkedin', label: 'LinkedIn', href: links.linkedin, size: 18, delay: 320 },
+  { name: 'github', label: 'GitHub', href: links.github, size: 18, delay: 380 },
+  { name: 'instagram', label: 'Instagram', href: links.instagram, size: 18, delay: 440 },
+] as const;
+---
+
+<Base
+  title="About — Luke To"
+  description="Who Luke To is, what he's building, and what he believes."
+  ground="#eef1ee"
+>
+  <div class="page">
+    <button class="back" id="back" type="button" aria-label="Back to home">L</button>
+
+    <div class="col">
+      <header class="head">
+        <Image
+          class="shot"
+          src={headshot}
+          alt="Luke To"
+          width={122}
+          height={122}
+          densities={[1, 2, 3]}
+          loading="eager"
+        />
+        <div class="ident">
+          <h1 class="name">{copy.name}</h1>
+          <div class="socials">
+            {
+              socials.map((s) => (
+                <a
+                  href={s.href}
+                  aria-label={s.label}
+                  style={`animation-delay:${s.delay}ms`}
+                >
+                  <SocialIcon name={s.name} size={s.size} />
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </header>
+
+      <h2 class="h">life story</h2>
+      <dl class="story">
+        {
+          copy.lifeStory.map((row) => (
+            <>
+              <dt>{row.age}</dt>
+              <dd>
+                {row.text}
+                {row.link && <> <a href={links.known}>{row.link}</a></>}
+              </dd>
+            </>
+          ))
+        }
+      </dl>
+
+      <h2 class="h">what i'm building now</h2>
+      <p class="body">
+        One sentence on the main thing.<br />And <a href={links.sideProject}
+          >the side thing</a
+        > that keeps you honest.
+      </p>
+
+      <h2 class="h">my beliefs</h2>
+      <dl class="beliefs">
+        {
+          copy.beliefs.map((belief, i) => (
+            <>
+              <dt>{String(i + 1).padStart(2, '0')}</dt>
+              <dd>{belief}</dd>
+            </>
+          ))
+        }
+      </dl>
+
+      <p class="talk">if any of these sound interesting, let's talk</p>
+      <div class="ctas">
+        <a class="btn btn-fill" href={links.calendly}>
+          {/* TODO: swap for the official Calendly mark once supplied. */}
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            style="display:block;flex:none"
+            aria-hidden="true"
+          >
+            <rect
+              x="2.6"
+              y="4.6"
+              width="18.8"
+              height="17"
+              rx="3.2"
+              stroke="#0d0d0d"
+              stroke-width="2.2"></rect>
+            <path d="M2.6 10.2h18.8" stroke="#0d0d0d" stroke-width="2.2"></path>
+            <path
+              d="M7.9 2.2v4.4M16.1 2.2v4.4"
+              stroke="#0d0d0d"
+              stroke-width="2.2"
+              stroke-linecap="round"></path>
+          </svg>
+          Book a time
+        </a>
+        <a class="btn btn-line" href={links.work}>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="#0d0d0d"
+            style="display:block;flex:none"
+            aria-hidden="true"
+          >
+            <rect x="2" y="2" width="8.6" height="8.6" rx="1.6"></rect>
+            <rect x="13.4" y="2" width="8.6" height="8.6" rx="1.6"></rect>
+            <rect x="2" y="13.4" width="8.6" height="8.6" rx="1.6"></rect>
+            <rect x="13.4" y="13.4" width="8.6" height="8.6" rx="1.6"></rect>
+          </svg>
+          View work
+        </a>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    position: relative;
+    padding: 52px 0 90px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background: #eef1ee;
+    animation: fadeup 0.35s ease both;
+  }
+
+  .back {
+    position: absolute;
+    top: 34px;
+    left: 34px;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 700 15px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #1a1a1a;
+    cursor: pointer;
+  }
+
+  .back:hover {
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .back:focus-visible {
+    outline: 2px solid rgba(0, 0, 0, 0.45);
+    outline-offset: 2px;
+  }
+
+  /* The column centers as a block; the text inside does not center. */
+  .col {
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .head {
+    display: flex;
+    gap: 26px;
+    align-items: flex-start;
+  }
+
+  .shot {
+    width: 122px;
+    height: 122px;
+    flex: none;
+    border-radius: 30px;
+    object-fit: cover;
+    object-position: 52% 20%;
+    background: #dfe4de;
+    display: block;
+  }
+
+  .ident {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+  }
+
+  .name {
+    margin: 0;
+    font: 700 36px/1.1 Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #0d0d0d;
+    letter-spacing: -0.02em;
+  }
+
+  .socials {
+    display: flex;
+    gap: 17px;
+    color: #0d0d0d;
+  }
+
+  .socials a {
+    display: flex;
+    color: inherit;
+    opacity: 0.78;
+    animation: iconIn 420ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  .socials a:hover {
+    color: inherit;
+    opacity: 1;
+    transform: translateY(-2px) scale(1.06);
+  }
+
+  .h {
+    margin: 36px 0 0;
+    font: 700 15px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #0d0d0d;
+  }
+
+  /* First heading sits further from the header row. */
+  .head + .h {
+    margin-top: 48px;
+  }
+
+  .story,
+  .beliefs {
+    margin: 12px 0 0;
+    display: grid;
+    row-gap: 10px;
+    align-items: baseline;
+  }
+
+  /* 1fr keeps the value cell from collapsing and wrapping its trailing link away. */
+  .story {
+    grid-template-columns: 96px 1fr;
+  }
+
+  .beliefs {
+    grid-template-columns: 60px 1fr;
+  }
+
+  .story dt {
+    font: 700 10px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.1em;
+    color: rgba(0, 0, 0, 0.35);
+  }
+
+  .beliefs dt {
+    font: 700 11px 'JetBrains Mono', ui-monospace, monospace;
+    color: rgba(0, 0, 0, 0.3);
+  }
+
+  .story dd,
+  .beliefs dd {
+    margin: 0;
+    font: 700 15.5px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #0d0d0d;
+  }
+
+  .story dd a {
+    color: #0d0d0d;
+  }
+
+  .body {
+    margin: 9px 0 0;
+    font: 400 15.5px/1.7 Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #1a1a1a;
+  }
+
+  .body a {
+    color: #1a1a1a;
+  }
+
+  .talk {
+    margin: 46px 0 0;
+    font: 700 15.5px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #0d0d0d;
+  }
+
+  .ctas {
+    margin-top: 16px;
+    display: flex;
+    gap: 11px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font: 700 14px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #0d0d0d;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    color: #0d0d0d;
+  }
+
+  .btn-fill {
+    background: #dfe4de;
+  }
+
+  .btn-fill:hover {
+    background: #d4dad3;
+  }
+
+  .btn-line {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-line:hover {
+    border-color: rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: 759.98px) {
+    .page {
+      padding: 34px 22px 60px;
+    }
+
+    .back {
+      top: 18px;
+      left: 18px;
+    }
+
+    .head {
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .ident {
+      align-items: center;
+    }
+
+    .name {
+      font-size: 28px;
+    }
+
+    .story {
+      grid-template-columns: 68px 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Going back is an instant swap with no whiteout — deliberately asymmetric.
+  document.getElementById('back')?.addEventListener('click', () => {
+    window.location.href = '/';
+  });
+</script>
