@@ -1,7 +1,9 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  // TODO: replace with the real domain before shipping — this is only used to
-  // build absolute URLs for the OG/Twitter card tags.
-  site: 'https://luketo.example',
+  // Published as a GitHub Pages project site, so everything lives under /Luke-site.
+  // Internal links go through withBase() in src/config/site.ts — see that helper
+  // before hardcoding any absolute path.
+  site: 'https://lukietoo.github.io',
+  base: '/Luke-site',
 });

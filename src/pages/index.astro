@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import SocialIcon from '../components/SocialIcon.astro';
-import { links, copy } from '../config/site';
+import { links, copy, withBase } from '../config/site';
 
 const socials = [
   { name: 'linkedin', label: 'LinkedIn', href: links.linkedin, size: 24 },
@@ -17,7 +17,7 @@ const socials = [
   ground="#04070d"
 >
   <!-- The whiteout navigates at 780ms; prefetching makes the swap land inside that window. -->
-  <link slot="head" rel="prefetch" href="/about" />
+  <link slot="head" rel="prefetch" href={withBase('/about')} />
 
   <div class="field" id="field">
     <canvas class="canvas" id="ascii" aria-hidden="true"></canvas>
@@ -307,7 +307,9 @@ const socials = [
 
 <script>
   import { createAsciiField, WHITEOUT_MS } from '../scripts/ascii-field';
-  import { fieldDefaults } from '../config/site';
+  import { fieldDefaults, withBase } from '../config/site';
+
+  const ABOUT_URL = withBase('/about');
 
   const container = document.getElementById('field') as HTMLElement;
   const canvas = document.getElementById('ascii') as HTMLCanvasElement;
@@ -328,14 +330,14 @@ const socials = [
     navigating = true;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      window.location.href = '/about';
+      window.location.href = ABOUT_URL;
       return;
     }
 
     field.startWhiteout();
     overlay.classList.add('on');
     window.setTimeout(() => {
-      window.location.href = '/about';
+      window.location.href = ABOUT_URL;
     }, WHITEOUT_MS - NAV_LEAD_MS);
   });
 

@@ -366,8 +366,10 @@ const socials = [
 </style>
 
 <script>
+  import { withBase } from '../config/site';
+
   // Going back is an instant swap with no whiteout — deliberately asymmetric.
   document.getElementById('back')?.addEventListener('click', () => {
-    window.location.href = '/';
+    window.location.href = withBase('/');
   });
 </script>

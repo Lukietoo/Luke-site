@@ -3,6 +3,17 @@
  * ASCII field's four tweakable parameters.
  */
 
+/**
+ * Prefixes a site-root path with the configured base. The site is published
+ * under /Luke-site on GitHub Pages, so every internal path — routes, favicon,
+ * OG image, prefetch — has to go through this. Works in both .astro frontmatter
+ * and client scripts; Vite inlines BASE_URL at build time.
+ */
+export function withBase(path = '/'): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return `${base}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
 /** ASCII field tuning. Defaults and ranges are from the handoff README. */
 export interface FieldConfig {
   /** Glyph color. Offered alternates: #5fe0cf, #d9a441, #8fffb0 */

@@ -1,5 +1,7 @@
 # Luke To — personal site
 
+Live at **https://lukietoo.github.io/Luke-site/**
+
 Two-page static site built with Astro, recreated from
 `design_handoff_personal_site/` (see that folder's README for the design spec).
 
@@ -31,6 +33,19 @@ npm run dev
 npm run build
 npm run preview
 ```
+
+## Deployment
+
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds and
+publishes to GitHub Pages.
+
+Because this is a **project** site, everything is served under `/Luke-site`
+(`base` in `astro.config.mjs`). Any internal path — routes, favicon, OG image,
+prefetch — must go through `withBase()` from `src/config/site.ts`. A hardcoded
+`/about` works in `npm run dev` and 404s in production.
+
+If you later move to a custom domain or to the `Lukietoo.github.io` repo, drop
+`base` and the `withBase()` calls collapse to no-ops.
 
 ## Layout
 
