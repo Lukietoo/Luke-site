@@ -1,0 +1,484 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import ChromeBar from '../../components/ChromeBar.astro';
+import { withBase } from '../../config/site';
+import { projects, gridProjects, alsoProjects, type Project } from '../../config/work';
+
+const ABOUT = withBase('/about/');
+const caseUrl = (slug: string) => withBase(`/work/${slug}/`);
+
+/** ROLE / host, with the design's double no-break space either side of the slash. */
+const metaLine = (p: Project) =>
+  `${p.role}  /  ${p.locked ? p.locked.meta : p.host}`;
+---
+
+<Base
+  title="Work — Luke To"
+  description="Selected work Luke To designed or is currently building."
+  ground="#eef1ee"
+>
+  <div class="page">
+    <a class="back" href={ABOUT} aria-label="Back to about">L</a>
+
+    <div class="col">
+      <header class="head">
+        <div>
+          <p class="eyebrow">{projects.length.toString().padStart(2, '0')} projects</p>
+          <h1 class="h1">
+            <span class="h1-type">selected work</span><span
+              class="cursor"
+              aria-hidden="true"></span>
+          </h1>
+        </div>
+        <p class="blurb">
+          Here are some of the works that I designed or currently building!
+        </p>
+      </header>
+
+      <div class="grid">
+        {
+          gridProjects.map((project, i) => (
+            <article class="card" style={`animation-delay:${160 + i * 90}ms`}>
+              <div class="frame">
+                <ChromeBar />
+                <div class="well">
+                  {project.locked ? (
+                    <div class="lock">
+                      <p class="lock-eyebrow">{project.locked.eyebrow}</p>
+                      <p class="lock-head">{project.locked.headline}</p>
+                      <p class="lock-sub">{project.locked.sub}</p>
+                    </div>
+                  ) : (
+                    <Image
+                      class="shot"
+                      src={project.card!}
+                      alt={`${project.name} screenshot`}
+                      widths={[520, 1040]}
+                      sizes="(max-width: 759.98px) 100vw, 520px"
+                      loading={i < 2 ? 'eager' : 'lazy'}
+                    />
+                  )}
+                  {/*
+                    Every card gets the ASCII load-in, locked ones included —
+                    the panel underneath is what it burns away to reveal.
+                  */}
+                  <canvas class="load" data-shot aria-hidden="true"></canvas>
+                  {!project.locked && (
+                    /*
+                      Mouse affordance only: it points at the same case study as
+                      the heading below, so it stays out of the tab order.
+                    */
+                    <a
+                      class="shot-link"
+                      href={caseUrl(project.slug)}
+                      aria-hidden="true"
+                      tabindex="-1"
+                    >
+                      <span class="pill">case study →</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              <div class="cap">
+                <div>
+                  {project.locked ? (
+                    <h2 class="name name-locked">{project.name}</h2>
+                  ) : (
+                    <h2 class="name">
+                      <a href={caseUrl(project.slug)}>{project.name}</a>
+                    </h2>
+                  )}
+                  <p class="meta">
+                    {metaLine(project)}
+                  </p>
+                </div>
+                {!project.locked && (
+                  <a
+                    class="arrow"
+                    href={caseUrl(project.slug)}
+                    aria-hidden="true"
+                    tabindex="-1"
+                  >
+                    →
+                  </a>
+                )}
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="also">
+        <p class="also-label">also</p>
+        <div class="also-list">
+          {
+            alsoProjects.map((project) => (
+              <a class="also-link" href={caseUrl(project.slug)}>
+                {project.name}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    position: relative;
+    padding: 84px 44px 100px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background: #eef1ee;
+    animation: fadeup 0.35s ease both;
+  }
+
+  .back {
+    position: absolute;
+    top: 34px;
+    left: 34px;
+    z-index: 20;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 700 15px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #1a1a1a;
+    text-decoration: none;
+  }
+
+  .back:hover {
+    background: rgba(0, 0, 0, 0.12);
+    color: #1a1a1a;
+  }
+
+  .back:focus-visible {
+    outline: 2px solid rgba(0, 0, 0, 0.45);
+    outline-offset: 2px;
+  }
+
+  .col {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .eyebrow {
+    margin: 0;
+    font: 500 10.5px 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.38);
+    animation: softIn 400ms ease 60ms both;
+  }
+
+  /* Same baseline-aligned type-in as the landing title, in ink instead of white. */
+  .h1 {
+    display: flex;
+    align-items: baseline;
+    margin: 14px 0 0;
+    font: 700 62px/1 'JetBrains Mono', ui-monospace, monospace;
+    color: #0d0d0d;
+    letter-spacing: -0.03em;
+  }
+
+  .h1-type {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typeWork 620ms steps(13, end) 120ms both;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.7em;
+    margin-left: 0.06em;
+    background: #0d0d0d;
+    animation: blink 1.1s steps(2, end) infinite;
+  }
+
+  .blurb {
+    margin: 0;
+    max-width: 330px;
+    font: 400 14.5px/1.6 Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: rgba(0, 0, 0, 0.6);
+    text-wrap: pretty;
+    animation: softIn 460ms ease 420ms both;
+  }
+
+  .grid {
+    margin-top: 68px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .card {
+    animation: rowIn 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  }
+
+  .frame {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    transition:
+      box-shadow 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .frame:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+  }
+
+  .well {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: #e6e9e5;
+    overflow: hidden;
+  }
+
+  .shot {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Sits over the screenshot until its load-in finishes, then removes itself. */
+  .load {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+
+  .lock {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 26px;
+    box-sizing: border-box;
+    text-align: center;
+    background: #e9ece8;
+  }
+
+  .lock p {
+    margin: 0;
+  }
+
+  .lock-eyebrow {
+    font: 500 9.5px 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.34);
+  }
+
+  .lock-head {
+    font: 700 clamp(18px, 2.4vw, 26px) / 1.25 Helvetica, 'Helvetica Neue', Arial,
+      sans-serif;
+    color: #0d0d0d;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+    text-wrap: pretty;
+  }
+
+  .lock-sub {
+    font: 400 12.5px/1.5 Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .shot-link {
+    position: absolute;
+    inset: 0;
+    padding: 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    transition: background 0.2s ease;
+  }
+
+  .shot-link:hover {
+    background: rgba(13, 13, 13, 0.07);
+  }
+
+  .pill {
+    padding: 8px 13px;
+    border-radius: 20px;
+    background: rgba(13, 13, 13, 0.86);
+    color: #fff;
+    font: 500 10px 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.92;
+  }
+
+  .cap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 18px;
+  }
+
+  .name {
+    margin: 0;
+    font: 700 26px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #0d0d0d;
+    letter-spacing: -0.02em;
+  }
+
+  .name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .name a:hover {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+
+  .name a:focus-visible {
+    outline: 2px solid rgba(0, 0, 0, 0.45);
+    outline-offset: 4px;
+  }
+
+  .name-locked {
+    color: rgba(13, 13, 13, 0.55);
+  }
+
+  .meta {
+    margin: 9px 0 0;
+    font: 500 10.5px 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .arrow {
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 400 14px 'JetBrains Mono', ui-monospace, monospace;
+    color: #0d0d0d;
+    text-decoration: none;
+    transition:
+      background 0.18s ease,
+      color 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  .arrow:hover {
+    background: #0d0d0d;
+    color: #fff;
+    transform: translate(1px, -1px);
+  }
+
+  .also {
+    margin-top: 34px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(0, 0, 0, 0.11);
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    row-gap: 14px;
+    align-items: baseline;
+  }
+
+  .also-label {
+    margin: 0;
+    font: 500 10.5px 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.34);
+  }
+
+  .also-list {
+    display: flex;
+    gap: 26px;
+    flex-wrap: wrap;
+  }
+
+  .also-link {
+    font: 700 17px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: #0d0d0d;
+    text-decoration: none;
+  }
+
+  .also-link:hover {
+    color: #0d0d0d;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+
+  @media (max-width: 759.98px) {
+    .page {
+      padding: 72px 22px 70px;
+    }
+
+    .back {
+      top: 18px;
+      left: 18px;
+    }
+
+    .h1 {
+      font-size: 34px;
+    }
+
+    .grid {
+      margin-top: 40px;
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+
+    .cap {
+      margin-top: 14px;
+    }
+
+    .name {
+      font-size: 21px;
+    }
+
+    .also {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { playShotFields } from '../../scripts/shot-field';
+  import { fieldDefaults } from '../../config/site';
+
+  const canvases = Array.from(
+    document.querySelectorAll<HTMLCanvasElement>('canvas[data-shot]'),
+  );
+  const stop = playShotFields(canvases, fieldDefaults.accent);
+  window.addEventListener('pagehide', stop);
+</script>

@@ -40,8 +40,6 @@ export const links = {
   github: 'https://github.com/',
   instagram: 'https://instagram.com/',
   calendly: 'https://calendly.com/',
-  /** "View work" CTA — destination TBD */
-  work: '#',
   /** "currently building <Project Name>" on the landing page */
   project: '#',
   /** Trailing link on the last life-story row */

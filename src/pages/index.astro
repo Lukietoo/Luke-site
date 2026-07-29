@@ -30,7 +30,14 @@ const socials = [
       </button>
     </div>
 
-    <div class="star" aria-hidden="true">&#10033;</div>
+    <button
+      class="star"
+      id="motion"
+      type="button"
+      title="Pause motion"
+      aria-label="Pause motion"
+      aria-pressed="false">&#10033;</button
+    >
 
     <div class="stack">
       <h1 class="title">
@@ -80,11 +87,44 @@ const socials = [
 
   .star {
     position: absolute;
-    top: 26px;
-    right: 30px;
+    top: 18px;
+    right: 22px;
+    z-index: 6;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #d9a441;
     font: 400 20px 'JetBrains Mono', ui-monospace, monospace;
     text-shadow: 0 0 12px rgba(217, 164, 65, 0.7);
+    cursor: pointer;
+    opacity: 0.9;
+    transition:
+      opacity 0.25s ease,
+      transform 1.2s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+
+  .star:hover {
+    opacity: 1;
+  }
+
+  /* Paused: the star turns off-axis and dims, so the state reads at a glance. */
+  .star[aria-pressed='true'] {
+    opacity: 0.4;
+    transform: rotate(135deg);
+  }
+
+  .star:focus {
+    outline: none;
+  }
+
+  .star:focus-visible {
+    outline: 1px solid rgba(217, 164, 65, 0.6);
   }
 
   .stack {
@@ -317,6 +357,7 @@ const socials = [
   const overlay = document.getElementById('whiteout') as HTMLElement;
   const notice = document.getElementById('notice');
   const dismiss = document.getElementById('notice-dismiss');
+  const motionToggle = document.getElementById('motion') as HTMLButtonElement;
 
   const field = createAsciiField(canvas, container, fieldDefaults);
 
@@ -339,6 +380,18 @@ const socials = [
     window.setTimeout(() => {
       window.location.href = ABOUT_URL;
     }, WHITEOUT_MS - NAV_LEAD_MS);
+  });
+
+  // aria-pressed is the single source of truth — the dimmed, rotated state is
+  // an attribute selector on it, so the two can't drift apart.
+  let paused = false;
+  motionToggle.addEventListener('click', () => {
+    paused = !paused;
+    const label = paused ? 'Resume motion' : 'Pause motion';
+    motionToggle.setAttribute('aria-pressed', String(paused));
+    motionToggle.setAttribute('aria-label', label);
+    motionToggle.title = label;
+    field.setMotion(!paused);
   });
 
   // Dismissal is session-only.

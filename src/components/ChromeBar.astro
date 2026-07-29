@@ -1,0 +1,52 @@
+---
+/**
+ * The fake browser chrome above every screenshot well — three dots and a blank
+ * address field. Decorative, so it is hidden from assistive tech entirely.
+ */
+interface Props {
+  /** Hero shots on a case study sit in a slightly roomier bar than grid cards. */
+  size?: 'card' | 'hero';
+}
+
+const { size = 'card' } = Astro.props;
+---
+
+<div class:list={['chrome', `chrome-${size}`]} aria-hidden="true">
+  <span class="dot"></span>
+  <span class="dot"></span>
+  <span class="dot"></span>
+  <span class="addr"></span>
+</div>
+
+<style>
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f4f5f2;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  }
+
+  .chrome-card {
+    padding: 9px 12px;
+  }
+
+  .chrome-hero {
+    padding: 10px 13px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.13);
+  }
+
+  .addr {
+    margin-left: 10px;
+    flex: 1;
+    height: 15px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+</style>

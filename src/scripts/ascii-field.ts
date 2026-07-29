@@ -1,7 +1,5 @@
 import type { FieldConfig } from '../config/site';
-
-/** 20 characters; index 0 is a space and is skipped. */
-const RAMP = " .`'-:;+=*co0O8$@B%#";
+import { RAMP, fitCanvas, type CanvasSize } from './canvas';
 
 /** ~14fps. Deliberately slow and filmic, not 60fps. */
 const FRAME_MS = 68;
@@ -11,6 +9,11 @@ export const WHITEOUT_MS = 820;
 export interface AsciiField {
   /** Ramps the field to maximum brightness over WHITEOUT_MS. */
   startWhiteout(): void;
+  /**
+   * Pauses/resumes the field. Paused, time stops advancing and the pointer
+   * bloom stops moving; one last frame lands and then the loop idles.
+   */
+  setMotion(on: boolean): void;
   destroy(): void;
 }
 
@@ -24,40 +27,27 @@ export function createAsciiField(
   config: FieldConfig,
 ): AsciiField {
   const ctx = canvas.getContext('2d');
-  if (!ctx) return { startWhiteout() {}, destroy() {} };
+  if (!ctx) return { startWhiteout() {}, setMotion() {}, destroy() {} };
 
   const ar = parseInt(config.accent.slice(1, 3), 16);
   const ag = parseInt(config.accent.slice(3, 5), 16);
   const ab = parseInt(config.accent.slice(5, 7), 16);
 
   // Every one of these changes per frame — none of it belongs in framework state.
-  let w = 0;
-  let h = 0;
+  const size: CanvasSize = { w: 0, h: 0 };
   let t = 0;
   let last = 0;
   let raf = 0;
   let fxStart = 0;
   let whiteout = false;
+  let motion = true;
+  /** Latch: paused, exactly one frame is drawn and then the loop goes quiet. */
+  let stillDrawn = false;
   const ptr = { x: -999, y: -999 };
 
-  /** Resizes the backing store only when the CSS size actually changed. */
-  function fit(): boolean {
-    if (!canvas.getBoundingClientRect().width) return false;
-    const nw = canvas.offsetWidth;
-    const nh = canvas.offsetHeight;
-    if (w !== nw || h !== nh) {
-      w = nw;
-      h = nh;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(nw * dpr);
-      canvas.height = Math.round(nh * dpr);
-      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    return true;
-  }
-
   function draw(): void {
-    if (!fit()) return;
+    if (!fitCanvas(canvas, ctx!, size)) return;
+    const { w, h } = size;
 
     const scale = config.glyphScale * (w < 560 ? 1.35 : 1);
     const cw = 6.6 * scale;
@@ -132,12 +122,21 @@ export function createAsciiField(
     raf = requestAnimationFrame(loop);
     if (ts - last < FRAME_MS) return;
     last = ts;
-    t += TIME_STEP * config.speed;
+
+    // A whiteout still has to play out even with motion paused.
+    if (!motion && !whiteout) {
+      if (stillDrawn) return;
+      stillDrawn = true;
+    } else {
+      stillDrawn = false;
+      t += TIME_STEP * config.speed;
+    }
     draw();
   }
 
   // Maps client coords into canvas space, accounting for any CSS scale.
   function onMove(e: MouseEvent): void {
+    if (!motion) return;
     const r = container.getBoundingClientRect();
     ptr.x = (e.clientX - r.left) * (container.offsetWidth / r.width);
     ptr.y = (e.clientY - r.top) * (container.offsetHeight / r.height);
@@ -155,7 +154,13 @@ export function createAsciiField(
   return {
     startWhiteout() {
       whiteout = true;
+      stillDrawn = false;
       fxStart = performance.now();
+    },
+    setMotion(on: boolean) {
+      motion = on;
+      // Clearing the latch buys the pause its one closing frame.
+      stillDrawn = false;
     },
     destroy() {
       cancelAnimationFrame(raf);
