@@ -67,9 +67,9 @@ const socials = [
 
       <h2 class="h">what i'm building now</h2>
       <p class="body">
-        One sentence on the main thing.<br />And <a href={links.sideProject}
-          >the side thing</a
-        > that keeps you honest.
+        {copy.building.main}<br />{copy.building.side.before}<a
+          href={links.sideProject}>{copy.building.side.link}</a
+        >{copy.building.side.after}
       </p>
 
       <h2 class="h">my beliefs</h2>

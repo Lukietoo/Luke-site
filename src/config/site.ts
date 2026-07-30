@@ -63,6 +63,19 @@ export const copy = {
     // README's note about the value column collapsing and wrapping it away.
     { age: 'AGE 00', text: "what you're known for now,", link: 'Link' },
   ] as { age: string; text: string; link?: string }[],
+  /**
+   * The "what i'm building now" paragraph. `side.link` renders as the
+   * sideProject anchor, sitting between `before` and `after` — the
+   * surrounding spaces are part of those strings.
+   */
+  building: {
+    main: 'One sentence on the main thing.',
+    side: {
+      before: 'And ',
+      link: 'the side thing',
+      after: ' that keeps you honest.',
+    },
+  },
   beliefs: [
     "a belief you'd defend at a party",
     'something > something else',
