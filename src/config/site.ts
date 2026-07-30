@@ -50,8 +50,9 @@ export const links = {
 };
 
 /**
- * `name`, `role` and `lifeStory` are final. TODO: `projectName`, `building`
- * and `beliefs` are still the handoff's placeholders.
+ * `name`, `role`, `lifeStory` and `beliefs` are final. TODO: `projectName` and
+ * `building` are still the handoff's placeholders — blocked on there being a
+ * named project to point them at.
  */
 export const copy = {
   name: 'Luke To',
@@ -89,8 +90,8 @@ export const copy = {
     },
   },
   beliefs: [
-    "a belief you'd defend at a party",
-    'something > something else',
-    'a thing most people get wrong',
+    "there's no such thing as embarrassment",
+    'an audience of one still counts',
+    "curiosity doesn't need a roadmap",
   ],
 };
