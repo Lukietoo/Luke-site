@@ -47,7 +47,9 @@ const metaLine = (p: Project) =>
                     <div class="lock">
                       <p class="lock-eyebrow">{project.locked.eyebrow}</p>
                       <p class="lock-head">{project.locked.headline}</p>
-                      <p class="lock-sub">{project.locked.sub}</p>
+                      {project.locked.sub && (
+                        <p class="lock-sub">{project.locked.sub}</p>
+                      )}
                     </div>
                   ) : (
                     <Image
@@ -84,7 +86,11 @@ const metaLine = (p: Project) =>
               <div class="cap">
                 <div>
                   {project.locked ? (
-                    <h2 class="name name-locked">{project.name}</h2>
+                    project.locked.caption ? (
+                      <p class="cap-note">{project.locked.caption}</p>
+                    ) : (
+                      <h2 class="name name-locked">{project.name}</h2>
+                    )
                   ) : (
                     <h2 class="name">
                       <a href={caseUrl(project.slug)}>{project.name}</a>
@@ -368,6 +374,16 @@ const metaLine = (p: Project) =>
 
   .name-locked {
     color: rgba(13, 13, 13, 0.55);
+  }
+
+  /* Sits where a name would. Deliberately not name-sized — it is a sentence,
+     and at the name's 26px bold it shouts over the named cards beside it. */
+  .cap-note {
+    margin: 0;
+    font: 400 15px/1.4 Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    color: rgba(13, 13, 13, 0.55);
+    max-width: 30ch;
+    text-wrap: pretty;
   }
 
   .meta {

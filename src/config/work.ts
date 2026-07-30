@@ -28,17 +28,29 @@ export interface LockedPanel {
   /** Mono eyebrow inside the well — the project's index, zero-padded to 3. */
   eyebrow: string;
   headline: string;
-  sub: string;
+  /** Optional line under the headline, inside the well. */
+  sub?: string;
+  /**
+   * Stands in for the name in the card's cap. Set this on a project whose name
+   * isn't public yet — the cap needs something in the name's slot or the card
+   * loses its rhythm against its neighbours.
+   */
+  caption?: string;
   /** Stands in for the host in the card's meta line. */
   meta: string;
 }
 
 export interface Project {
-  name: string;
-  role: string;
+  /**
+   * All three are omitted together, and only on a locked project that isn't
+   * ready to be named — a card with no name has no host or case-study URL to
+   * spell it out in either. `locked.caption` and `locked.meta` cover the card.
+   */
+  name?: string;
   /** Bare host; the case study prefixes https:// for the live link. */
-  host: string;
-  slug: string;
+  host?: string;
+  slug?: string;
+  role: string;
   /** Present on placeholders. Locked projects get no case study and no links. */
   locked?: LockedPanel;
   /** Grid thumbnail. Locked projects show their panel instead. */
@@ -83,14 +95,11 @@ export const projects: Project[] = [
     },
   },
   {
-    name: 'Fieldnote',
     role: 'build',
-    host: 'fieldnote.io',
-    slug: 'fieldnote',
     locked: {
       eyebrow: '004',
       headline: 'coming soon!',
-      sub: 'something new is in the works',
+      caption: 'something new is in the works',
       meta: 'coming soon',
     },
   },
@@ -110,14 +119,23 @@ export const projects: Project[] = [
   },
 ];
 
+/** A project with a case study, so it is guaranteed to be named and routable. */
+export type OpenProject = Project & { name: string; host: string; slug: string };
+
 /** The 2x2 card grid. */
 export const gridProjects = projects.slice(0, 4);
 
-/** Everything past the grid, listed by name under ALSO. */
-export const alsoProjects = projects.slice(4);
+/**
+ * Everything past the grid, listed by name under ALSO. Locked entries are
+ * dropped: the row is a list of names that link to case studies, and a locked
+ * project has neither.
+ */
+export const alsoProjects = projects
+  .slice(4)
+  .filter((p): p is OpenProject => !p.locked);
 
 /** Only these get a case study, and only these are in the next-> cycle. */
-export const openProjects = projects.filter((p) => !p.locked);
+export const openProjects = projects.filter((p): p is OpenProject => !p.locked);
 
 /** Zero-padded position in `projects` — the `CASE 0N` eyebrow. */
 export function caseNumber(project: Project): string {
@@ -125,7 +143,7 @@ export function caseNumber(project: Project): string {
 }
 
 /** Next unlocked project, wrapping. Locked entries are skipped entirely. */
-export function nextOpen(project: Project): Project {
+export function nextOpen(project: Project): OpenProject {
   const i = openProjects.indexOf(project);
   return openProjects[(Math.max(0, i) + 1) % openProjects.length];
 }
