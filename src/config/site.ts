@@ -33,31 +33,23 @@ export const fieldDefaults: FieldConfig = {
   calmRadius: 0.18,
 };
 
-/** TODO: project, known and sideProject are still placeholders — they depend
- * on the about-page copy (issue #2). */
 export const links = {
   linkedin: 'https://www.linkedin.com/in/luketo/',
   x: 'https://x.com/Lukietoo',
   github: 'https://github.com/Lukietoo',
   instagram: 'https://www.instagram.com/lukietoo/',
   calendly: 'https://calendly.com/luketruongto-berkeley/30min',
-  /** "currently building <Project Name>" on the landing page */
-  project: '#',
-  /** Trailing link on the last life-story row */
-  known: '#',
-  /** "the side thing" inline link */
-  sideProject: '#',
 };
 
-/**
- * `name`, `role`, `lifeStory` and `beliefs` are final. TODO: `projectName` and
- * `building` are still the handoff's placeholders — blocked on there being a
- * named project to point them at.
- */
+/** All final. Nothing here is a placeholder. */
 export const copy = {
   name: 'Luke To',
   role: 'Student @ UC Berkeley & Founder',
-  projectName: 'Project Name',
+  /**
+   * Landing page: renders as "currently building <this>", unlinked. The work
+   * has no public name yet — when it gets one, this becomes the link text.
+   */
+  buildingNow: 'tools for telling your own story',
   lifeStory: [
     { age: 'AGE 12', text: 'built a working cardboard PC to play video games.' },
     {
@@ -69,26 +61,16 @@ export const copy = {
       age: 'AGE 17',
       text: 'became obsessed with storytelling, and building in order to tell stories.',
     },
-    // A trailing `link` must stay in the same grid cell as its text — see the
-    // README's note about the value column collapsing and wrapping it away.
     {
       age: 'AGE 19',
       text: "stories are how we make sense of being alive. Now I'm trying to build tools that help anyone turn theirs into one worth telling.",
     },
-  ] as { age: string; text: string; link?: string }[],
-  /**
-   * The "what i'm building now" paragraph. `side.link` renders as the
-   * sideProject anchor, sitting between `before` and `after` — the
-   * surrounding spaces are part of those strings.
-   */
-  building: {
-    main: 'One sentence on the main thing.',
-    side: {
-      before: 'And ',
-      link: 'the side thing',
-      after: ' that keeps you honest.',
-    },
-  },
+  ] as { age: string; text: string }[],
+  /** The "what i'm building now" paragraph, one line per entry. */
+  building: [
+    'Tools that help anyone turn their own story into one worth telling.',
+    'Still early, still unnamed.',
+  ],
   beliefs: [
     "there's no such thing as embarrassment",
     'an audience of one still counts',

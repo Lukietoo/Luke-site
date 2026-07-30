@@ -48,7 +48,7 @@ const socials = [
       <p class="role">{copy.role}</p>
 
       <p class="building">
-        currently building <a href={links.project}>{copy.projectName} &#8599;</a>
+        currently building <span class="what">{copy.buildingNow}</span>
       </p>
 
       <div class="socials">
@@ -194,19 +194,10 @@ const socials = [
     animation: softIn 460ms cubic-bezier(0.2, 0.7, 0.3, 1) 790ms both;
   }
 
-  .building a {
+  /* Lifts the work itself out of the dimmer "currently building" prefix. No
+     hover state — it is not a link until the work has a name to point at. */
+  .building .what {
     color: rgba(255, 255, 255, 0.88);
-    text-decoration: none;
-    transition:
-      color 0.18s ease,
-      text-shadow 0.18s ease;
-  }
-
-  .building a:hover {
-    color: #fff;
-    text-shadow:
-      0 0 6px rgba(255, 255, 255, 0.85),
-      0 0 18px rgba(150, 195, 255, 0.6);
   }
 
   .socials {
