@@ -49,19 +49,31 @@ export const links = {
   sideProject: '#',
 };
 
-/** TODO: placeholder copy — the handoff says final copy is coming separately. */
+/**
+ * `name`, `role` and `lifeStory` are final. TODO: `projectName`, `building`
+ * and `beliefs` are still the handoff's placeholders.
+ */
 export const copy = {
   name: 'Luke To',
   role: 'Student @ UC Berkeley & Founder',
   projectName: 'Project Name',
   lifeStory: [
-    { age: 'AGE 00', text: 'first thing that pointed you here' },
-    { age: 'AGE 00', text: 'the obsession that stuck' },
-    { age: 'AGE 00', text: 'the first thing you shipped' },
-    { age: 'AGE 00', text: 'the thing that failed, usefully' },
-    // The trailing link must stay in the same grid cell as its text — see the
+    { age: 'AGE 12', text: 'built a working cardboard PC to play video games.' },
+    {
+      age: 'AGE 13',
+      text: 'started building on Roblox, learned to code just to bring my ideas to life.',
+    },
+    { age: 'AGE 15', text: 'one of my games hit 1000 plays for the first time.' },
+    {
+      age: 'AGE 17',
+      text: 'became obsessed with storytelling, and building in order to tell stories.',
+    },
+    // A trailing `link` must stay in the same grid cell as its text — see the
     // README's note about the value column collapsing and wrapping it away.
-    { age: 'AGE 00', text: "what you're known for now,", link: 'Link' },
+    {
+      age: 'AGE 19',
+      text: "stories are how we make sense of being alive. Now I'm trying to build tools that help anyone turn theirs into one worth telling.",
+    },
   ] as { age: string; text: string; link?: string }[],
   /**
    * The "what i'm building now" paragraph. `side.link` renders as the
