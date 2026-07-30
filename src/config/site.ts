@@ -33,13 +33,14 @@ export const fieldDefaults: FieldConfig = {
   calmRadius: 0.18,
 };
 
-/** TODO: all of these are the prototype's placeholder destinations. */
+/** TODO: project, known and sideProject are still placeholders — they depend
+ * on the about-page copy (issue #2). */
 export const links = {
-  linkedin: 'https://linkedin.com/',
-  x: 'https://x.com/',
-  github: 'https://github.com/',
-  instagram: 'https://instagram.com/',
-  calendly: 'https://calendly.com/',
+  linkedin: 'https://www.linkedin.com/in/luketo/',
+  x: 'https://x.com/Lukietoo',
+  github: 'https://github.com/Lukietoo',
+  instagram: 'https://www.instagram.com/lukietoo/',
+  calendly: 'https://calendly.com/luketruongto-berkeley/30min',
   /** "currently building <Project Name>" on the landing page */
   project: '#',
   /** Trailing link on the last life-story row */
