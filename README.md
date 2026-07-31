@@ -125,18 +125,15 @@ numbers have to change with it.
 1. **Real `href`s** — every link in `src/config/site.ts` still points at a bare
    domain or `#`: the four socials, Calendly, `Project Name`, and the two inline
    body links.
-2. **Final copy** — `copy` in `src/config/site.ts` holds the placeholder life
-   story rows, beliefs, role line, and project name. The "what i'm building now"
-   paragraph is still inline in `about.astro`.
-3. **Case-study prose** — the `intro` on each project in `src/config/work.ts`
+2. **Case-study prose** — the `intro` on each project in `src/config/work.ts`
    describes what the project *is*, not what Luke did on it. Rewrite them in his
    own voice. A project with no `intro` falls back to `placeholderIntro`.
    `src/assets/work/*.png` are 1440x900 screenshots captured from the live sites
    at `deviceScaleFactor: 1.5`; re-shoot at those dimensions when a project
    changes and the `<Image>` tags need no edits.
-4. **Calendly icon** — currently a neutral calendar glyph in `about.astro`.
+3. **Calendly icon** — currently a neutral calendar glyph in `about.astro`.
    Drop in the official mark from Calendly's brand page when you have it.
-5. **`site` in `astro.config.mjs`** — currently `https://lukietoo.github.io`,
+4. **`site` in `astro.config.mjs`** — currently `https://lukietoo.github.io`,
    which is where Pages serves it. Point it at a custom domain if you get one;
    it's what builds the absolute canonical and OG URLs.
 

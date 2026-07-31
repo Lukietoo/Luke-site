@@ -52,25 +52,15 @@ export const copy = {
   buildingNow: 'tools for telling your own story',
   lifeStory: [
     { age: 'AGE 12', text: 'built a working cardboard PC to play video games.' },
-    {
-      age: 'AGE 13',
-      text: 'started building on Roblox, learned to code just to bring my ideas to life.',
-    },
-    { age: 'AGE 15', text: 'one of my games hit 1000 plays for the first time.' },
-    {
-      age: 'AGE 17',
-      text: 'became obsessed with storytelling, and building in order to tell stories.',
-    },
+    { age: 'AGE 13', text: 'learned how to code and build on Roblox.' },
+    { age: 'AGE 15', text: 'first Roblox game hit 1000 plays.' },
+    { age: 'AGE 17', text: 'started telling stories through code and projects.' },
+    { age: 'AGE 18', text: 'accepted into UC Berkeley to keep on building.' },
     {
       age: 'AGE 19',
-      text: "stories are how we make sense of being alive. Now I'm trying to build tools that help anyone turn theirs into one worth telling.",
+      text: 'became passionate about storytelling and the best way to tell them.',
     },
   ] as { age: string; text: string }[],
-  /** The "what i'm building now" paragraph, one line per entry. */
-  building: [
-    'Tools that help anyone turn their own story into one worth telling.',
-    'Still early, still unnamed.',
-  ],
   beliefs: [
     "there's no such thing as embarrassment",
     'an audience of one still counts',
