@@ -17,6 +17,7 @@ import paperTraderC from '../assets/work/paper-trader-c.png';
 import antsA from '../assets/work/ants-a.png';
 import antsB from '../assets/work/ants-b.png';
 import antsC from '../assets/work/ants-c.png';
+import catsCard from '../assets/work/cats-card.png';
 import catsA from '../assets/work/cats-a.png';
 import catsB from '../assets/work/cats-b.png';
 import catsC from '../assets/work/cats-c.png';
@@ -119,17 +120,6 @@ export const placeholderIntro =
 
 export const projects: Project[] = [
   {
-    name: 'Docere',
-    role: 'design + build',
-    locked: {
-      // No `sub` — the stealth card below owns the "check back later :)" line,
-      // and two locked cards echoing it in the same grid reads as a copy-paste.
-      eyebrow: '001',
-      headline: 'building this one now…',
-      meta: 'in progress',
-    },
-  },
-  {
     name: 'Paper Trading',
     role: 'design + build',
     url: 'https://lukietoo.github.io/WIP_Mockup/',
@@ -151,26 +141,47 @@ export const projects: Project[] = [
       description: 'Positions, activity, and P&L — sketched, not shipped.',
     },
   },
-  // Two unnamed filler cards, holding the bottom row of the grid until there is
-  // real work to put in their slots. Neither carries an invented project name —
-  // `caption` covers the cap so nothing on the page claims a project that isn't.
   {
-    role: 'design + build',
-    locked: {
-      eyebrow: '003',
-      headline: 'building in stealth right now…',
-      sub: 'check back later :)',
-      caption: 'something quiet, not ready to be named',
-      meta: 'in stealth',
+    name: 'CATS',
+    role: 'build',
+    url: 'https://cats.cs61a.org',
+    slug: 'cats',
+    // Same art as the share card, extended to 16:10 so the well crops none of
+    // it. The case study still opens on the typing test itself.
+    card: catsCard,
+    cardAlt: 'CATS card — the name spelled out across four keycaps beside a cat-eared key',
+    shots: [catsA, catsB, catsC],
+    intro:
+      'Computer Aided Typing Software: a typing test that measures words per minute and accuracy against a generated passage, with an autocorrect option that suggests the intended word from a small edit distance. Built for CS 61A at Berkeley.',
+    share: {
+      image: '/og-cats.png',
+      imageAlt:
+        'CATS spelled across four dark keycaps on green, one of them a white key with cat ears, under the line "How fast can you type?"',
+      description: 'A typing test that scores speed, accuracy, and your spelling.',
     },
   },
   {
-    role: 'build',
+    name: 'Docere',
+    role: 'design + build',
+    locked: {
+      // No `sub` — the card below owns the second line, and two locked cards
+      // each carrying one in the same grid reads as a copy-paste.
+      eyebrow: '003',
+      headline: 'fixing website bugs',
+      meta: 'in progress',
+    },
+  },
+  // Unnamed, holding the last slot of the grid until there is real work to put
+  // in it. No invented project name — `caption` covers the cap so nothing on
+  // the page claims a project that isn't.
+  {
+    role: 'design + build',
     locked: {
       eyebrow: '004',
-      headline: 'coming soon!',
-      caption: 'something new is in the works',
-      meta: 'coming soon',
+      headline: 'coming soon',
+      sub: 'building in stealth right now',
+      caption: 'Check back soon!',
+      meta: 'in stealth',
     },
   },
   {
@@ -184,15 +195,6 @@ export const projects: Project[] = [
     //   video: { src: '/work/ants-demo.mp4', alt: 'a round of Ants Vs. SomeBees' }
     intro:
       'A tower-defense game in Python, built as the object-oriented programming project for CS 61A at Berkeley. Ants defend a colony against invading bees, and each new ant type is a subclass that bends one rule of the base behaviour — so the work is mostly in getting the inheritance hierarchy to carry its weight.',
-  },
-  {
-    name: 'CATS',
-    role: 'build',
-    url: 'https://cats.cs61a.org',
-    slug: 'cats',
-    shots: [catsA, catsB, catsC],
-    intro:
-      'Computer Aided Typing Software: a typing test that measures words per minute and accuracy against a generated passage, with an autocorrect option that suggests the intended word from a small edit distance. Built for CS 61A at Berkeley.',
   },
 ];
 

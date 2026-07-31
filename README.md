@@ -177,6 +177,11 @@ A case study can replace the site-wide card by setting `share` on its entry in
 an optional description that replaces the generated one. `Base.astro` takes
 `ogImage`/`ogImageAlt` for the same thing on a one-off page.
 
+`og-paper-trader.png` has a source in `scripts/`; `og-cats.png` doesn't — it's a
+design handoff's own render, downsampled from 2400x1260. `cats-card.png` is that
+same art with the flat green extended top and bottom to reach the grid's 16:10,
+so the well crops nothing off the sides.
+
 ## The favicon
 
 The mark is the ASCII field boiled down to a 3x3 matrix with the calm pocket in
