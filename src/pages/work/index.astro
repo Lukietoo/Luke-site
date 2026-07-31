@@ -3,14 +3,21 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ChromeBar from '../../components/ChromeBar.astro';
 import { withBase } from '../../config/site';
-import { projects, gridProjects, alsoProjects, type Project } from '../../config/work';
+import {
+  projects,
+  gridProjects,
+  alsoProjects,
+  displayUrl,
+  type Project,
+  type OpenProject,
+} from '../../config/work';
 
 const ABOUT = withBase('/about/');
 const caseUrl = (slug: string) => withBase(`/work/${slug}/`);
 
-/** ROLE / host, with the design's double no-break space either side of the slash. */
+/** ROLE / url, with the design's double no-break space either side of the slash. */
 const metaLine = (p: Project) =>
-  `${p.role}  /  ${p.locked ? p.locked.meta : p.host}`;
+  `${p.role}  /  ${p.locked ? p.locked.meta : displayUrl(p as OpenProject)}`;
 ---
 
 <Base

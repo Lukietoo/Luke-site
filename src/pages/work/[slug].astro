@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import ChromeBar from '../../components/ChromeBar.astro';
 import { withBase } from '../../config/site';
@@ -8,11 +8,12 @@ import {
   placeholderIntro,
   caseNumber,
   nextOpen,
-  type Project,
+  displayUrl,
+  type OpenProject,
 } from '../../config/work';
 
-// Locked projects are placeholders with nothing to show, so they get no page —
-// which also makes /work/basecase/ a 404 rather than an empty case study.
+// Locked projects have nothing to show, so they get no page — which also makes
+// /work/docere/ a 404 rather than an empty case study.
 export function getStaticPaths() {
   return openProjects.map((project) => ({
     params: { slug: project.slug },
@@ -21,20 +22,32 @@ export function getStaticPaths() {
 }
 
 interface Props {
-  project: Project;
+  project: OpenProject;
 }
 
 const { project } = Astro.props;
 const [hero, detailA, detailB] = project.shots!;
 const next = nextOpen(project);
-const liveUrl = `https://${project.host}`;
+const liveUrl = project.url;
+const liveLabel = displayUrl(project);
 const WORK = withBase('/work/');
+
+// The hero still doubles as the video's poster, so the frame holds its shape
+// while the file loads instead of collapsing to a black box.
+const { video } = project;
+const poster = video
+  ? (await getImage({ src: hero, width: 1800, format: 'webp' })).src
+  : undefined;
 ---
 
 <Base
   title={`${project.name} — Luke To`}
-  description={`${project.name}: ${project.role} by Luke To.`}
+  description={
+    project.share?.description ?? `${project.name}: ${project.role} by Luke To.`
+  }
   ground="#eef1ee"
+  ogImage={project.share?.image}
+  ogImageAlt={project.share?.imageAlt}
 >
   <div class="page">
     <a class="back" href={WORK} aria-label="Back to work">←</a>
@@ -50,7 +63,7 @@ const WORK = withBase('/work/');
         <dd>{project.role}</dd>
         <dt>live</dt>
         <dd>
-          <a href={liveUrl} target="_blank" rel="noopener">{project.host} ↗</a>
+          <a href={liveUrl} target="_blank" rel="noopener">{liveLabel} ↗</a>
         </dd>
       </dl>
 
@@ -58,21 +71,47 @@ const WORK = withBase('/work/');
         <a class="open" href={liveUrl} target="_blank" rel="noopener">
           Open {project.name} ↗
         </a>
-        <span class="open-host" aria-hidden="true">{project.host}</span>
+        <span class="open-host" aria-hidden="true">{liveLabel}</span>
       </div>
 
       <div class="shots">
         <div class="hero-frame">
           <ChromeBar size="hero" />
           <div class="well">
-            <Image
-              class="shot"
-              src={hero}
-              alt={`${project.name} — hero screenshot`}
-              widths={[900, 1800]}
-              sizes="(max-width: 759.98px) 100vw, 900px"
-              loading="eager"
-            />
+            {
+              video ? (
+                /*
+                  No autoplay: it is the largest thing on the page and starting
+                  it unasked is exactly the behaviour `prefers-reduced-motion`
+                  exists to stop. The poster carries the frame until it's played.
+                */
+                <video
+                  class="shot"
+                  controls
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  poster={poster}
+                  aria-label={video.alt}
+                >
+                  {video.webm && (
+                    <source src={withBase(video.webm)} type="video/webm" />
+                  )}
+                  <source src={withBase(video.src)} type="video/mp4" />
+                  {video.alt}
+                </video>
+              ) : (
+                <Image
+                  class="shot"
+                  src={hero}
+                  alt={`${project.name} — hero screenshot`}
+                  widths={[900, 1800]}
+                  sizes="(max-width: 759.98px) 100vw, 900px"
+                  loading="eager"
+                />
+              )
+            }
           </div>
         </div>
 
@@ -270,6 +309,13 @@ const WORK = withBase('/work/');
     height: 100%;
     display: block;
     object-fit: cover;
+  }
+
+  /* Recordings are letterboxed, not cropped. A screenshot survives losing its
+     edges to `cover`; a demo of a game board does not. */
+  video.shot {
+    object-fit: contain;
+    background: #0d0d0d;
   }
 
   .details {

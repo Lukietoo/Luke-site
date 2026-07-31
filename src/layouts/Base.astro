@@ -7,12 +7,25 @@ interface Props {
   description: string;
   /** Sets the page background so there is no flash before CSS paints. */
   ground: '#04070d' | '#eef1ee';
+  /**
+   * Overrides the site-wide share card. Root-relative path to a 1200x630 PNG
+   * under `public/` — the dimensions below are declared, not measured. Pass
+   * `ogImageAlt` with it; the default alt describes the default card.
+   */
+  ogImage?: string;
+  ogImageAlt?: string;
 }
 
-const { title, description, ground } = Astro.props;
+const { title, description, ground, ogImage: card, ogImageAlt } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-// TODO: replace with a purpose-built 1200x630 card.
-const ogImage = new URL(withBase('/og-image.png'), Astro.site);
+// One card for the whole site unless a page brings its own — only the title and
+// description vary per page. Regenerate the default with the script in the
+// README if the name or role line changes.
+const DEFAULT_OG_IMAGE = '/og-image.png';
+const DEFAULT_OG_IMAGE_ALT = 'Luke To — Student @ UC Berkeley & Founder';
+// Absolute: a relative og:image silently fails in Slack and iMessage.
+const ogImage = new URL(withBase(card ?? DEFAULT_OG_IMAGE), Astro.site);
+const OG_IMAGE_ALT = ogImageAlt ?? DEFAULT_OG_IMAGE_ALT;
 const favicon = withBase('/favicon.svg');
 ---
 
@@ -32,10 +45,17 @@ const favicon = withBase('/favicon.svg');
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    {/* Lets a scraper reserve the space before it fetches the file, so the
+        unfurl doesn't reflow once the image lands. */}
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={OG_IMAGE_ALT} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={OG_IMAGE_ALT} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

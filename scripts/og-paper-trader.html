@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!--
+      The link-preview card for /work/paper-trader/, built from the "Clay grid"
+      handoff. Every coordinate below is in the 1200x630 canvas and comes from
+      that spec — treat them as final and edit deliberately.
+
+      Rasterize with:  node scripts/og-image.mjs scripts/og-paper-trader.html public/og-paper-trader.png
+    -->
+    <meta name="og-font-check" content="700 92px 'Caveat'" />
+    <meta name="og-font-check" content="600 21px 'Inter'" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+      }
+      body {
+        background: #d9695e;
+      }
+      svg {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      width="1200"
+      height="630"
+      viewBox="0 0 1200 630"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <!-- The only filter on the card. It goes on the slip and the rule under
+             the headline, never on text — displaced small type stops being
+             legible at unfurl size. -->
+        <filter id="ogSketch">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.022"
+            numOctaves="2"
+            result="n"
+          ></feTurbulence>
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="n"
+            scale="3"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          ></feDisplacementMap>
+        </filter>
+      </defs>
+
+      <rect width="1200" height="630" fill="#D9695E"></rect>
+
+      <!-- Ruled ground. The verticals stop at x=630: the right half is
+           deliberately ungridded, since the slip covers it anyway. -->
+      <g stroke="#2A1512" stroke-width="1.5" opacity="0.16">
+        <path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200"></path>
+        <path d="M90 0V630M180 0V630M270 0V630M360 0V630M450 0V630M540 0V630M630 0V630"></path>
+      </g>
+
+      <!-- The slip: bleeds off the top and bottom edges, and the 2.4deg rotation
+           is what makes it read as a loose piece of paper rather than a panel. -->
+      <g transform="rotate(2.4 900 315)">
+        <rect
+          x="700"
+          y="-60"
+          width="420"
+          height="750"
+          fill="#FEFDF9"
+          stroke="#2A1512"
+          stroke-width="3"
+          filter="url(#ogSketch)"
+        ></rect>
+        <text
+          x="910"
+          y="80"
+          text-anchor="middle"
+          font-family="Caveat, cursive"
+          font-size="52"
+          font-weight="700"
+          fill="#2A1512"
+        >Day 214</text>
+        <path d="M734 118H1086" stroke="#E0D3CE" stroke-width="3" stroke-dasharray="10 10"></path>
+
+        <!-- xml:space="preserve" is load-bearing: the tickers are padded with
+             runs of spaces so the xNN column lines up, and SVG collapses
+             whitespace without it. The minus is U+2212, not a hyphen. -->
+        <g
+          xml:space="preserve"
+          font-family="ui-monospace, SFMono-Regular, Menlo, monospace"
+          font-size="27"
+          fill="#2A1512"
+        >
+          <text x="734" y="176">NVDA  x12</text><text x="1086" y="176" text-anchor="end" fill="#2E7D5B">+842</text>
+          <text x="734" y="230">AAPL  x40</text><text x="1086" y="230" text-anchor="end" fill="#2E7D5B">+318</text>
+          <text x="734" y="284">TSLA  x08</text><text x="1086" y="284" text-anchor="end" fill="#B23F30">−204</text>
+          <text x="734" y="338">SPY   x25</text><text x="1086" y="338" text-anchor="end" fill="#2E7D5B">+96</text>
+          <text x="734" y="392">MSFT  x14</text><text x="1086" y="392" text-anchor="end" fill="#2E7D5B">+221</text>
+        </g>
+
+        <path d="M734 424H1086" stroke="#E0D3CE" stroke-width="3" stroke-dasharray="10 10"></path>
+        <text
+          x="734"
+          y="482"
+          font-family="Inter, sans-serif"
+          font-size="26"
+          font-weight="600"
+          fill="#9A7F79"
+          letter-spacing="1.5"
+        >TODAY</text>
+        <text
+          x="1086"
+          y="490"
+          text-anchor="end"
+          font-family="Caveat, cursive"
+          font-size="60"
+          font-weight="700"
+          fill="#2E7D5B"
+        >+$1,052</text>
+        <g stroke="#2A1512" stroke-width="3.5" opacity="0.8">
+          <path d="M766 528v26M776 528v26M786 528v26M800 528v26M810 528v26M824 528v26M834 528v26M848 528v26M858 528v26M872 528v26M886 528v26M896 528v26M906 528v26M920 528v26M930 528v26M944 528v26M958 528v26M968 528v26M982 528v26M996 528v26M1006 528v26M1020 528v26M1034 528v26M1044 528v26"></path>
+        </g>
+      </g>
+
+      <!-- Left column, unrotated on the clay ground. Everything here stays
+           inside a 72px margin: narrow columns in Slack and Discord crop the
+           card to roughly 2:1. -->
+      <text
+        x="72"
+        y="128"
+        font-family="Inter, sans-serif"
+        font-size="21"
+        font-weight="600"
+        fill="#FBE2DE"
+        letter-spacing="3"
+      >PAPER TRADING · WIP</text>
+      <text
+        x="68"
+        y="272"
+        font-family="Caveat, cursive"
+        font-size="92"
+        font-weight="700"
+        fill="#2A1512"
+      >A hand-drawn</text>
+      <text
+        x="68"
+        y="356"
+        font-family="Caveat, cursive"
+        font-size="92"
+        font-weight="700"
+        fill="#2A1512"
+      >trading dashboard</text>
+      <g filter="url(#ogSketch)">
+        <path d="M72 404H404" stroke="#FEFDF9" stroke-width="6" stroke-linecap="round"></path>
+      </g>
+      <text x="72" y="464" font-family="Inter, sans-serif" font-size="26" fill="#7A2B22">Positions, activity, and P&amp;L —</text>
+      <text x="72" y="502" font-family="Inter, sans-serif" font-size="26" fill="#7A2B22">sketched, not shipped.</text>
+      <!-- The handoff's card said PAPERTRADING.APP, which is not a host this
+           project has. This is the live mockup the case study links out to. -->
+      <text
+        x="72"
+        y="566"
+        font-family="Inter, sans-serif"
+        font-size="21"
+        font-weight="600"
+        fill="#FBE2DE"
+        letter-spacing="2.5"
+      >LUKIETOO.GITHUB.IO/WIP_MOCKUP</text>
+    </svg>
+  </body>
+</html>

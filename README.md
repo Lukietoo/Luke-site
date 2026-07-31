@@ -13,7 +13,7 @@ the newer spec covering work + case studies).
 
 Clicking `LEARN MORE` plays the 820ms whiteout, then navigates at 780ms.
 
-The prototype was a single component behind a hash router (`#/work/meridian`).
+The prototype was a single component behind a hash router (`#/work/<slug>`).
 Here every screen is a real Astro page, so the back arrows and card clicks are
 plain `<a>` links rather than the spec's `<button>` + `history` calls.
 
@@ -75,14 +75,26 @@ If you later move to a custom domain or to the `Lukietoo.github.io` repo, drop
 ## Work and case studies
 
 `src/config/work.ts` is the only file to touch when the projects change. Order
-in the `projects` array does three things at once: the first four entries are
-the 2x2 grid, the rest become the ALSO row, and a project's index is its
+in the `projects` array does three things at once: the first `GRID_SIZE` entries
+are the card grid, the rest become the ALSO row, and a project's index is its
 `CASE 0N` number.
 
-A project with a `locked` panel is a placeholder — it renders the stealth /
+`url` is the full URL including protocol — several projects live under a path
+rather than at the root of their own domain, so it can't be a bare host.
+`displayUrl()` strips the protocol and trailing slash for the meta line and the
+case study's LIVE row.
+
+A project with a `video` shows a recording in the case study's hero frame
+instead of `shots[0]`, which becomes the poster — so it still needs all three
+stills. Video files go in `public/`, not `src/assets`: Astro's asset pipeline
+only optimises images. It renders with controls and no autoplay, and is
+letterboxed rather than cropped. Use it for anything that can't be linked
+because it only runs locally.
+
+A project with a `locked` panel has nothing public yet — it renders the
 coming-soon well instead of a screenshot, its name is dimmed, it gets no links,
-and `getStaticPaths` skips it, so `/work/basecase/` is a genuine 404. Deleting
-its `locked` block and adding `card` + `shots` is all it takes to publish it.
+and `getStaticPaths` skips it, so `/work/docere/` is a genuine 404. Deleting its
+`locked` block and adding `url`, `slug`, `card` + `shots` publishes it.
 
 Each grid card plays a 1180ms ASCII load-in (staggered 200ms) that burns away to
 reveal the screenshot underneath — locked cards included. Under
@@ -115,14 +127,62 @@ numbers have to change with it.
 2. **Final copy** — `copy` in `src/config/site.ts` holds the placeholder life
    story rows, beliefs, role line, and project name. The "what i'm building now"
    paragraph is still inline in `about.astro`.
-3. **Real projects** — every name, host and write-up in `src/config/work.ts` is
-   a placeholder from the handoff, and `src/assets/work/*.png` are generated
-   flat-grey 16:10 stand-ins. Replace the images at the same paths and the
-   `<Image>` tags need no edits. Case-study prose falls back to
-   `placeholderIntro`; give a project its own `intro` to override.
+3. **Case-study prose** — the `intro` on each project in `src/config/work.ts`
+   describes what the project *is*, not what Luke did on it. Rewrite them in his
+   own voice. A project with no `intro` falls back to `placeholderIntro`.
+   `src/assets/work/*.png` are 1440x900 screenshots captured from the live sites
+   at `deviceScaleFactor: 1.5`; re-shoot at those dimensions when a project
+   changes and the `<Image>` tags need no edits.
 4. **Calendly icon** — currently a neutral calendar glyph in `about.astro`.
    Drop in the official mark from Calendly's brand page when you have it.
-5. **`site` in `astro.config.mjs`** — set to the real domain; it's what builds
-   the absolute canonical and OG URLs.
-6. **`public/og-image.png`** — a generated 1200x630 placeholder. Worth replacing
-   with a properly typeset card (it renders in a system mono, not JetBrains Mono).
+5. **`site` in `astro.config.mjs`** — currently `https://lukietoo.github.io`,
+   which is where Pages serves it. Point it at a custom domain if you get one;
+   it's what builds the absolute canonical and OG URLs.
+
+## The link-preview cards
+
+`public/og-image.png` is 1200x630 (the OG spec, 1.91:1) and is the card for
+every page — only `og:title` and `og:description` vary. `twitter:card` is
+`summary_large_image`, so it unfurls as a full-width banner.
+
+They're generated, not hand-made. Edit the source HTML and re-run the script,
+which takes a source and a destination:
+
+```bash
+npm i --no-save puppeteer-core
+node scripts/og-image.mjs
+node scripts/og-image.mjs scripts/og-paper-trader.html public/og-paper-trader.png
+```
+
+That renders the card at 2x through the machine's Chrome and downsamples to
+1200x630, so the type is properly antialiased. Each source declares the
+webfaces it can't ship without in `<meta name="og-font-check">`, and the script
+aborts rather than writing a file if one hasn't arrived from Google Fonts —
+otherwise it would silently ship the card set in a fallback face, which is
+exactly the bug that made the first one need replacing. A source declaring no
+check at all is an error too, not a pass.
+
+`Base.astro` declares the card's `og:image:width`/`height` so a scraper can
+reserve the space before fetching. If you change a card's dimensions, change
+them there too — nothing checks that they agree.
+
+### A project's own card
+
+A case study can replace the site-wide card by setting `share` on its entry in
+`src/config/work.ts` — a root-relative path under `public/`, its alt text, and
+an optional description that replaces the generated one. `Base.astro` takes
+`ogImage`/`ogImageAlt` for the same thing on a one-off page.
+
+`paper-trader` is the only one so far: `scripts/og-paper-trader.html` renders
+the "Clay grid" receipt from its design handoff. It's inline SVG, with every
+coordinate in the 1200x630 canvas — the handoff calls those final, so change
+them deliberately. Two things there aren't obvious:
+
+- `xml:space="preserve"` on the ticker rows is load-bearing. The labels are
+  padded with runs of spaces so the `xNN` column lines up, and SVG collapses
+  whitespace without it.
+- The `ogSketch` filter goes on the slip and the rule under the headline, never
+  on text — displaced type stops being legible at unfurl size.
+
+Slack and X cache OG images hard. When a card's art changes, ship it under a new
+filename rather than overwriting the old path, or the stale one keeps unfurling.

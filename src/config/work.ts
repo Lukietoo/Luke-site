@@ -1,27 +1,24 @@
 /**
  * Project data behind /work/ and /work/<slug>/.
  *
- * Names, hosts, copy and screenshots are all placeholders from the handoff —
- * swap them for real work. Order matters twice over: the first four entries
- * are the 2x2 grid, the rest fall into the ALSO row, and the case-study number
- * (`CASE 0N`) is a project's position in this array.
+ * Order matters twice over: the first `GRID_SIZE` entries are the card grid,
+ * the rest fall into the ALSO row, and the case-study number (`CASE 0N`) is a
+ * project's position in this array.
+ *
+ * Screenshots are captured from the live sites, so they go stale when a project
+ * ships a redesign — re-shoot rather than letting a case study lie.
  */
 import type { ImageMetadata } from 'astro';
 
-import meridianCard from '../assets/work/meridian-card.png';
-import meridianA from '../assets/work/meridian-a.png';
-import meridianB from '../assets/work/meridian-b.png';
-import meridianC from '../assets/work/meridian-c.png';
-import halfnoteCard from '../assets/work/halfnote-card.png';
-import halfnoteA from '../assets/work/halfnote-a.png';
-import halfnoteB from '../assets/work/halfnote-b.png';
-import halfnoteC from '../assets/work/halfnote-c.png';
-import overpassA from '../assets/work/overpass-a.png';
-import overpassB from '../assets/work/overpass-b.png';
-import overpassC from '../assets/work/overpass-c.png';
-import softserveA from '../assets/work/softserve-a.png';
-import softserveB from '../assets/work/softserve-b.png';
-import softserveC from '../assets/work/softserve-c.png';
+import paperTraderA from '../assets/work/paper-trader-a.png';
+import paperTraderB from '../assets/work/paper-trader-b.png';
+import paperTraderC from '../assets/work/paper-trader-c.png';
+import antsA from '../assets/work/ants-a.png';
+import antsB from '../assets/work/ants-b.png';
+import antsC from '../assets/work/ants-c.png';
+import catsA from '../assets/work/cats-a.png';
+import catsB from '../assets/work/cats-b.png';
+import catsC from '../assets/work/cats-c.png';
 
 /** Replaces the screenshot well on a project that has nothing public yet. */
 export interface LockedPanel {
@@ -36,19 +33,41 @@ export interface LockedPanel {
    * loses its rhythm against its neighbours.
    */
   caption?: string;
-  /** Stands in for the host in the card's meta line. */
+  /** Stands in for the live URL in the card's meta line. */
   meta: string;
+}
+
+/**
+ * A project's own link-preview card, replacing the site-wide one on its case
+ * study. Worth making only for a project whose design says something the
+ * generic card can't — everything else unfurls fine as `og-image.png`.
+ */
+export interface Share {
+  /**
+   * PNG under `public/`, root-relative — it goes through `withBase()` and is
+   * made absolute against `site` at render, since relative OG paths silently
+   * fail in Slack and iMessage. Must be 1200x630, matching the dimensions
+   * `Base.astro` declares.
+   */
+  image: string;
+  /** What the card shows, for anyone reading the unfurl with a screen reader. */
+  imageAlt: string;
+  /** Replaces the generated description on this project's case study. */
+  description?: string;
 }
 
 export interface Project {
   /**
-   * All three are omitted together, and only on a locked project that isn't
-   * ready to be named — a card with no name has no host or case-study URL to
-   * spell it out in either. `locked.caption` and `locked.meta` cover the card.
+   * All three are omitted together, and only on a locked project with nothing
+   * to link to yet. `locked.caption` and `locked.meta` cover the card.
    */
   name?: string;
-  /** Bare host; the case study prefixes https:// for the live link. */
-  host?: string;
+  /**
+   * Full URL of the live project, protocol included — several of these live
+   * under a path rather than at the root of their own domain, so this cannot
+   * be a bare host. `displayUrl` strips it down for display.
+   */
+  url?: string;
   slug?: string;
   role: string;
   /** Present on placeholders. Locked projects get no case study and no links. */
@@ -57,8 +76,32 @@ export interface Project {
   card?: ImageMetadata;
   /** Case study: hero first, then the two detail shots. */
   shots?: [ImageMetadata, ImageMetadata, ImageMetadata];
+  /**
+   * A screen recording, for a project that has to be watched rather than
+   * visited — anything that only runs locally. It takes over the case study's
+   * hero frame and `shots[0]` becomes its poster, so a project with a video
+   * still needs all three stills.
+   */
+  video?: Video;
   /** Per-project case-study opener; falls back to the placeholder below. */
   intro?: string;
+  /** Per-project link-preview card; falls back to the site-wide one. */
+  share?: Share;
+}
+
+/**
+ * Video lives in `public/`, not `src/assets` — Astro's asset pipeline handles
+ * images, and passing it a video would only mean it gets copied through with a
+ * hashed name. Both paths are root-relative and go through `withBase()` at
+ * render, like every other internal path on the site.
+ */
+export interface Video {
+  /** MP4 path under `public/`, e.g. `/work/ants-demo.mp4`. Widest support. */
+  src: string;
+  /** Optional WebM companion, offered to the browser first when present. */
+  webm?: string;
+  /** What the clip shows, for anyone who can't or won't play it. */
+  alt: string;
 }
 
 /** TODO: one of these per project once the real write-ups exist. */
@@ -67,30 +110,43 @@ export const placeholderIntro =
 
 export const projects: Project[] = [
   {
-    name: 'Meridian',
+    name: 'Docere',
     role: 'design + build',
-    host: 'meridian.app',
-    slug: 'meridian',
-    card: meridianCard,
-    shots: [meridianA, meridianB, meridianC],
+    locked: {
+      // No `sub` — the stealth card below owns the "check back later :)" line,
+      // and two locked cards echoing it in the same grid reads as a copy-paste.
+      eyebrow: '001',
+      headline: 'building this one now…',
+      meta: 'in progress',
+    },
   },
   {
-    name: 'Halfnote',
-    role: 'design',
-    host: 'halfnote.co',
-    slug: 'halfnote',
-    card: halfnoteCard,
-    shots: [halfnoteA, halfnoteB, halfnoteC],
-  },
-  {
-    name: 'Basecase',
+    name: 'Paper Trading',
     role: 'design + build',
-    host: 'basecase.dev',
-    slug: 'basecase',
+    url: 'https://lukietoo.github.io/WIP_Mockup/',
+    slug: 'paper-trader',
+    card: paperTraderA,
+    shots: [paperTraderA, paperTraderB, paperTraderC],
+    intro:
+      'An early, experimental mockup of a paper-trading dashboard, inspired by a popular GitHub repo for an AI trading agent. The goal was an easy-to-read interface for following paper trades over time: portfolio value and P&L up top, then positions and a full activity log behind their own tabs.',
+    // Built from the "Clay grid" handoff — source in scripts/og-paper-trader.html.
+    share: {
+      image: '/og-paper-trader.png',
+      imageAlt:
+        'A torn paper receipt listing NVDA, AAPL, TSLA and SPY with a +$1,052 daily total, beside a hand-lettered headline.',
+      description: 'Positions, activity, and P&L — sketched, not shipped.',
+    },
+  },
+  // Two unnamed filler cards, holding the bottom row of the grid until there is
+  // real work to put in their slots. Neither carries an invented project name —
+  // `caption` covers the cap so nothing on the page claims a project that isn't.
+  {
+    role: 'design + build',
     locked: {
       eyebrow: '003',
       headline: 'building in stealth right now…',
       sub: 'check back later :)',
+      caption: 'something quiet, not ready to be named',
       meta: 'in stealth',
     },
   },
@@ -104,26 +160,36 @@ export const projects: Project[] = [
     },
   },
   {
-    name: 'Overpass',
-    role: 'design',
-    host: 'overpass.studio',
-    slug: 'overpass',
-    shots: [overpassA, overpassB, overpassC],
+    name: 'Ants Vs. SomeBees',
+    role: 'build',
+    url: 'https://cs61a.org/proj/ants/',
+    slug: 'ants',
+    shots: [antsA, antsB, antsC],
+    // Drop a recording in here once there's one to show — it takes over the
+    // hero frame and `shots[0]` becomes its poster:
+    //   video: { src: '/work/ants-demo.mp4', alt: 'a round of Ants Vs. SomeBees' }
+    intro:
+      'A tower-defense game in Python, built as the object-oriented programming project for CS 61A at Berkeley. Ants defend a colony against invading bees, and each new ant type is a subclass that bends one rule of the base behaviour — so the work is mostly in getting the inheritance hierarchy to carry its weight.',
   },
   {
-    name: 'Softserve',
-    role: 'design + build',
-    host: 'softserve.fm',
-    slug: 'softserve',
-    shots: [softserveA, softserveB, softserveC],
+    name: 'CATS',
+    role: 'build',
+    url: 'https://cats.cs61a.org',
+    slug: 'cats',
+    shots: [catsA, catsB, catsC],
+    intro:
+      'Computer Aided Typing Software: a typing test that measures words per minute and accuracy against a generated passage, with an autocorrect option that suggests the intended word from a small edit distance. Built for CS 61A at Berkeley.',
   },
 ];
 
 /** A project with a case study, so it is guaranteed to be named and routable. */
-export type OpenProject = Project & { name: string; host: string; slug: string };
+export type OpenProject = Project & { name: string; url: string; slug: string };
+
+/** How many projects lead the page as cards. The rest fall into the ALSO row. */
+const GRID_SIZE = 4;
 
 /** The 2x2 card grid. */
-export const gridProjects = projects.slice(0, 4);
+export const gridProjects = projects.slice(0, GRID_SIZE);
 
 /**
  * Everything past the grid, listed by name under ALSO. Locked entries are
@@ -131,11 +197,16 @@ export const gridProjects = projects.slice(0, 4);
  * project has neither.
  */
 export const alsoProjects = projects
-  .slice(4)
+  .slice(GRID_SIZE)
   .filter((p): p is OpenProject => !p.locked);
 
 /** Only these get a case study, and only these are in the next-> cycle. */
 export const openProjects = projects.filter((p): p is OpenProject => !p.locked);
+
+/** The live URL as it reads in copy: no protocol, no trailing slash. */
+export function displayUrl(project: OpenProject): string {
+  return project.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+}
 
 /** Zero-padded position in `projects` — the `CASE 0N` eyebrow. */
 export function caseNumber(project: Project): string {
