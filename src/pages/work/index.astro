@@ -62,7 +62,7 @@ const metaLine = (p: Project) =>
                     <Image
                       class="shot"
                       src={project.card!}
-                      alt={`${project.name} screenshot`}
+                      alt={project.cardAlt ?? `${project.name} screenshot`}
                       widths={[520, 1040]}
                       sizes="(max-width: 759.98px) 100vw, 520px"
                       loading={i < 2 ? 'eager' : 'lazy'}

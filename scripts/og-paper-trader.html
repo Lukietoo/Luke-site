@@ -3,11 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <!--
-      The link-preview card for /work/paper-trader/, built from the "Clay grid"
-      handoff. Every coordinate below is in the 1200x630 canvas and comes from
-      that spec — treat them as final and edit deliberately.
+      The paper-trader card, built from the "Clay grid" handoff. Every
+      coordinate below is in the 1200x630 canvas and comes from that spec —
+      treat them as final and edit deliberately.
 
-      Rasterize with:  node scripts/og-image.mjs scripts/og-paper-trader.html public/og-paper-trader.png
+      Two crops come out of this one file. The ground, the ruled verticals and
+      the slip are all drawn well past the 1200x630 edges, so widening the
+      viewBox reveals more card rather than letterboxing it:
+
+        share card, 1.91:1, public/ and the <head>
+          node scripts/og-image.mjs scripts/og-paper-trader.html public/og-paper-trader.png
+
+        grid thumbnail, 16:10, the work grid's well
+          node scripts/og-image.mjs 'scripts/og-paper-trader.html?tall' src/assets/work/paper-trader-card.png 1200x750
     -->
     <meta name="og-font-check" content="700 92px 'Caveat'" />
     <meta name="og-font-check" content="600 21px 'Inter'" />
@@ -39,6 +47,7 @@
   </head>
   <body>
     <svg
+      id="card"
       width="1200"
       height="630"
       viewBox="0 0 1200 630"
@@ -65,23 +74,29 @@
         </filter>
       </defs>
 
-      <rect width="1200" height="630" fill="#D9695E"></rect>
+      <!-- Overdrawn top and bottom so the ?tall crop has ground to sit on. -->
+      <rect y="-120" width="1200" height="870" fill="#D9695E"></rect>
 
       <!-- Ruled ground. The verticals stop at x=630: the right half is
-           deliberately ungridded, since the slip covers it anyway. -->
+           deliberately ungridded, since the slip covers it anyway. The
+           horizontals stay on the spec's six positions — the extra clay the
+           tall crop exposes is meant to read as margin, not as more grid. -->
       <g stroke="#2A1512" stroke-width="1.5" opacity="0.16">
         <path d="M0 90H1200M0 180H1200M0 270H1200M0 360H1200M0 450H1200M0 540H1200"></path>
-        <path d="M90 0V630M180 0V630M270 0V630M360 0V630M450 0V630M540 0V630M630 0V630"></path>
+        <path d="M90 -120V750M180 -120V750M270 -120V750M360 -120V750M450 -120V750M540 -120V750M630 -120V750"></path>
       </g>
 
       <!-- The slip: bleeds off the top and bottom edges, and the 2.4deg rotation
-           is what makes it read as a loose piece of paper rather than a panel. -->
+           is what makes it read as a loose piece of paper rather than a panel.
+           The spec's rect is y=-60 h=750, which bleeds past 1200x630 but only
+           just reaches the tall crop's edges — hence the extra 90 either way,
+           so it still runs off the frame at 16:10. -->
       <g transform="rotate(2.4 900 315)">
         <rect
           x="700"
-          y="-60"
+          y="-150"
           width="420"
-          height="750"
+          height="930"
           fill="#FEFDF9"
           stroke="#2A1512"
           stroke-width="3"
@@ -183,5 +198,19 @@
         letter-spacing="2.5"
       >LUKIETOO.GITHUB.IO/WIP_MOCKUP</text>
     </svg>
+
+    <script>
+      // ?tall widens the crop to 16:10 for the work grid's well, which is
+      // `object-fit: cover` — at 1.91:1 it would take ~95px off each side and
+      // clip the headline. Same composition, 60px more clay above and below;
+      // nothing here moves, only what the viewBox admits.
+      if (new URLSearchParams(location.search).has('tall')) {
+        const card = document.getElementById('card');
+        card.setAttribute('viewBox', '0 -60 1200 750');
+        card.setAttribute('height', '750');
+        document.documentElement.style.height = '750px';
+        document.body.style.height = '750px';
+      }
+    </script>
   </body>
 </html>

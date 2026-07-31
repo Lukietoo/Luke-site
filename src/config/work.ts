@@ -10,6 +10,7 @@
  */
 import type { ImageMetadata } from 'astro';
 
+import paperTraderCard from '../assets/work/paper-trader-card.png';
 import paperTraderA from '../assets/work/paper-trader-a.png';
 import paperTraderB from '../assets/work/paper-trader-b.png';
 import paperTraderC from '../assets/work/paper-trader-c.png';
@@ -72,8 +73,16 @@ export interface Project {
   role: string;
   /** Present on placeholders. Locked projects get no case study and no links. */
   locked?: LockedPanel;
-  /** Grid thumbnail. Locked projects show their panel instead. */
+  /**
+   * Grid thumbnail, 16:10 — the well crops to `cover`. Locked projects show
+   * their panel instead.
+   */
   card?: ImageMetadata;
+  /**
+   * Overrides the grid thumbnail's alt text. Only needed when the thumbnail
+   * isn't a screenshot, since the default calls it one.
+   */
+  cardAlt?: string;
   /** Case study: hero first, then the two detail shots. */
   shots?: [ImageMetadata, ImageMetadata, ImageMetadata];
   /**
@@ -125,7 +134,12 @@ export const projects: Project[] = [
     role: 'design + build',
     url: 'https://lukietoo.github.io/WIP_Mockup/',
     slug: 'paper-trader',
-    card: paperTraderA,
+    // The grid shows the project's own card rather than a screenshot of it —
+    // same art as the share card below, rendered at 16:10 so the well doesn't
+    // crop the headline. The case study still opens on the real dashboard.
+    card: paperTraderCard,
+    cardAlt:
+      'Paper Trading card — a hand-lettered headline beside a paper receipt of the day’s trades',
     shots: [paperTraderA, paperTraderB, paperTraderC],
     intro:
       'An early, experimental mockup of a paper-trading dashboard, inspired by a popular GitHub repo for an AI trading agent. The goal was an easy-to-read interface for following paper trades over time: portfolio value and P&L up top, then positions and a full activity log behind their own tabs.',
