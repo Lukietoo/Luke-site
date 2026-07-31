@@ -1,12 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#04070d" />
-  <text
-    x="16"
-    y="17"
-    text-anchor="middle"
-    dominant-baseline="central"
-    font-family="ui-monospace, monospace"
-    font-size="22"
-    fill="#d9a441"
-  >&#10033;</text>
+<!--
+  The radial matrix from the design handoff: the ASCII field reduced to a 3x3
+  grid with the calm pocket in the middle. Same geometry as favicon-*.png —
+  17.2% padding, corner dots 12.5% of the tile, edge dots 8.6% — expressed on a
+  512 grid so every edge lands on an integer and the small sizes stay crisp.
+  Square on purpose; the platforms that want a rounded tile round it themselves.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#04070d" />
+  <g fill="#fff">
+    <rect x="112" y="112" width="64" height="64" />
+    <rect x="336" y="112" width="64" height="64" />
+    <rect x="112" y="336" width="64" height="64" />
+    <rect x="336" y="336" width="64" height="64" />
+  </g>
+  <g fill="#fff" fill-opacity=".62">
+    <rect x="234" y="122" width="44" height="44" />
+    <rect x="122" y="234" width="44" height="44" />
+    <rect x="346" y="234" width="44" height="44" />
+    <rect x="234" y="346" width="44" height="44" />
+  </g>
 </svg>

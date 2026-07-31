@@ -69,7 +69,8 @@ If you later move to a custom domain or to the `Lukietoo.github.io` repo, drop
 | `src/config/work.ts` | Project data, screenshot imports, case ordering |
 | `src/components/SocialIcon.astro` | X / LinkedIn / GitHub / Instagram paths |
 | `src/components/ChromeBar.astro` | Fake browser chrome above every screenshot |
-| `src/layouts/Base.astro` | Document head — title, meta, OG/Twitter |
+| `src/layouts/Base.astro` | Document head — title, meta, icons, OG/Twitter |
+| `src/pages/site.webmanifest.ts` | PWA manifest, a route so its paths get the base |
 | `src/styles/global.css` | Keyframes (verbatim from the handoff) + reduced-motion |
 
 ## Work and case studies
@@ -145,6 +146,12 @@ numbers have to change with it.
 every page — only `og:title` and `og:description` vary. `twitter:card` is
 `summary_large_image`, so it unfurls as a full-width banner.
 
+The one in the repo is the design handoff's own render, downsampled from its
+2400x1260 master. `scripts/og-image.html` reproduces that design — same field
+math, type and pocket — but its field is seeded from a different roll, so
+re-running the script gives the same card with a different scatter of glyphs,
+not the file that's checked in.
+
 They're generated, not hand-made. Edit the source HTML and re-run the script,
 which takes a source and a destination:
 
@@ -172,6 +179,33 @@ A case study can replace the site-wide card by setting `share` on its entry in
 `src/config/work.ts` — a root-relative path under `public/`, its alt text, and
 an optional description that replaces the generated one. `Base.astro` takes
 `ogImage`/`ogImageAlt` for the same thing on a one-off page.
+
+## The favicon
+
+The mark is the ASCII field boiled down to a 3x3 matrix with the calm pocket in
+the middle. Every raster size came from the design handoff; `public/favicon.svg`
+is the same geometry redrawn as vectors, and is what scaling browsers use.
+
+| File | Where it's used |
+|---|---|
+| `favicon.svg` | `rel=icon`, preferred by anything that can scale |
+| `favicon.ico` | `rel=icon`, and the `/favicon.ico` crawlers fetch unasked |
+| `favicon-16.png`, `favicon-32.png` | `rel=icon` for browsers that read neither |
+| `favicon-48.png` | Not linked — the third size inside the `.ico` |
+| `apple-touch-icon-180.png` | iOS home screen; square, iOS applies the mask |
+| `favicon-512-square.png`, `maskable-512.png` | The manifest's two icons |
+
+The `.ico` is a repack, not a re-render — it bundles the three PNGs as-is:
+
+```bash
+node scripts/favicon-ico.mjs
+```
+
+`src/pages/site.webmanifest.ts` builds the manifest as a route rather than a
+static file so `start_url` and the icon paths pick up the base; a literal `/`
+in a `public/site.webmanifest` would point off the top of the domain.
+`theme-color` isn't in there — `Base.astro` emits it per page from the `ground`
+prop, so mobile browser chrome follows the page it's on.
 
 `paper-trader` is the only one so far: `scripts/og-paper-trader.html` renders
 the "Clay grid" receipt from its design handoff. It's inline SVG, with every

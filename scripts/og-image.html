@@ -5,6 +5,7 @@
     <!-- Checked by og-image.mjs before it shoots: the card set in a fallback
          mono is the bug that made the first one need replacing. -->
     <meta name="og-font-check" content="500 104px 'JetBrains Mono'" />
+    <meta name="og-font-check" content="400 15px 'JetBrains Mono'" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -27,98 +28,100 @@
         position: relative;
         background: #04070d;
       }
+      /* Full-bleed: 110 columns at this tracking overhang 1200px by a glyph or
+         two, which is the point — no margin of dead ground at the edges. */
       #field {
         position: absolute;
         inset: 0;
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 13px;
+        letter-spacing: 2.1px;
+        color: rgba(255, 255, 255, 0.5);
+        white-space: pre;
+      }
+      /* Clears the middle so the name isn't read through the field. The mask is
+         wider than it is tall because the name is. */
+      .pocket {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 46% 52% at 50% 50%,
+          rgba(4, 7, 13, 0.94) 0%,
+          rgba(4, 7, 13, 0) 100%
+        );
       }
       .stack {
         position: absolute;
         inset: 0;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
       }
       .title {
         display: flex;
         align-items: baseline;
+        gap: 12px;
         font-family: 'JetBrains Mono', monospace;
         font-weight: 500;
         font-size: 104px;
         line-height: 1.1;
         color: #fff;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
         text-shadow:
-          0 0 3px rgba(255, 255, 255, 0.7),
-          0 0 30px rgba(140, 190, 255, 0.35);
+          0 0 4px rgba(255, 255, 255, 0.6),
+          0 0 44px rgba(140, 190, 255, 0.34);
       }
-      .cursor {
-        display: inline-block;
-        width: 0.56em;
-        height: 0.74em;
-        margin-left: 0.08em;
+      /* Sits on the baseline rather than in the line box, so it reads as the
+         cursor at the end of a typed line. */
+      .caret {
+        width: 46px;
+        height: 8px;
         background: #fff;
-      }
-      .role {
-        margin-top: 34px;
-        font: 500 19px 'JetBrains Mono', monospace;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.9);
-      }
-      /* Same hairline the site uses to separate the name from what's under it. */
-      .rule {
-        margin-top: 40px;
-        width: 132px;
-        height: 1px;
-        background: rgba(122, 168, 255, 0.45);
+        box-shadow: 0 0 14px rgba(255, 255, 255, 0.7);
       }
     </style>
   </head>
   <body>
-    <canvas id="field" width="1200" height="630"></canvas>
+    <pre id="field"></pre>
+    <div class="pocket"></div>
     <div class="stack">
-      <h1 class="title"><span>Luke To</span><span class="cursor"></span></h1>
-      <div class="rule"></div>
-      <p class="role">Student @ UC Berkeley &amp; Founder</p>
+      <h1 class="title"><span>Luke To</span><span class="caret"></span></h1>
     </div>
 
     <script>
-      // A still frame of the landing page's ASCII field: a mono glyph grid that
-      // falls quiet toward the middle so the name stays legible on top of it.
-      const c = document.getElementById('field');
-      const x = c.getContext('2d');
-      const GLYPHS = '.:-=+*#%@';
-      const CELL = 15;
-      const cx = 1200 / 2;
-      const cy = 630 / 2;
-      const maxD = Math.hypot(cx, cy);
+      // The landing page's field, still: density rises with distance from the
+      // center, so the edges pack solid and the middle thins out to nothing.
+      const COLS = 110;
+      const ROWS = 48;
+      const RAMP = ' .:-=+*#%@';
 
-      x.font = "500 13px 'JetBrains Mono', monospace";
-      x.textBaseline = 'middle';
-      x.textAlign = 'center';
+      // Seeded, so re-rendering the card doesn't reshuffle every glyph and turn
+      // a no-op regeneration into a diff.
+      let seed = 0x5cae7a1f;
+      const rand = () => {
+        seed = (seed + 0x6d2b79f5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
 
-      for (let gy = CELL / 2; gy < 630; gy += CELL) {
-        for (let gx = CELL / 2; gx < 1200; gx += CELL) {
-          const nx = (gx - cx) / maxD;
-          const ny = (gy - cy) / maxD;
-          const d = Math.hypot(nx, ny);
-
-          // Two interfering waves stand in for the field's motion, sampled at one
-          // instant. Everything inside calmRadius is dropped.
-          const w =
-            Math.sin(gx * 0.021 + gy * 0.013) * 0.5 +
-            Math.sin(gx * 0.009 - gy * 0.024 + 1.7) * 0.5;
-          const falloff = Math.max(0, (d - 0.18) / (1 - 0.18));
-          const amp = ((w + 1) / 2) * falloff;
-          if (amp < 0.16) continue;
-
-          const g = GLYPHS[Math.min(GLYPHS.length - 1, Math.floor(amp * 9))];
-          const tint = amp > 0.62 ? '122, 168, 255' : '210, 226, 255';
-          x.fillStyle = `rgba(${tint}, ${(amp * 0.34).toFixed(3)})`;
-          x.fillText(g, gx, gy);
+      let out = '';
+      for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+          // Normalized per axis, so the falloff is an ellipse the shape of the
+          // card and reaches ~1.41 in the corners.
+          const nx = (col - (COLS - 1) / 2) / ((COLS - 1) / 2);
+          const ny = (row - (ROWS - 1) / 2) / ((ROWS - 1) / 2);
+          const p = Math.min(1, Math.pow(Math.hypot(nx, ny) / 1.08, 1.9));
+          // One roll decides whether a cell is lit at all, a second picks how
+          // heavy the glyph is — light ones stay possible even at the edges.
+          out += rand() < p ? RAMP[1 + Math.floor(p * rand() * 9)] : ' ';
         }
+        out += '\n';
       }
+      document.getElementById('field').textContent = out;
     </script>
   </body>
 </html>

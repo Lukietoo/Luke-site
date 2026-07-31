@@ -22,11 +22,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 // description vary per page. Regenerate the default with the script in the
 // README if the name or role line changes.
 const DEFAULT_OG_IMAGE = '/og-image.png';
-const DEFAULT_OG_IMAGE_ALT = 'Luke To — Student @ UC Berkeley & Founder';
+const DEFAULT_OG_IMAGE_ALT = 'Luke To — white monospace name over a dark ASCII field';
 // Absolute: a relative og:image silently fails in Slack and iMessage.
 const ogImage = new URL(withBase(card ?? DEFAULT_OG_IMAGE), Astro.site);
 const OG_IMAGE_ALT = ogImageAlt ?? DEFAULT_OG_IMAGE_ALT;
-const favicon = withBase('/favicon.svg');
 ---
 
 <!doctype html>
@@ -37,7 +36,19 @@ const favicon = withBase('/favicon.svg');
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href={favicon} type="image/svg+xml" />
+
+    {/* SVG first for anything that can scale it; the .ico is the fallback for
+        crawlers and older clients, which ask for it by name whether or not it's
+        declared. The PNGs cover the browsers that read neither. */}
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon.ico')} sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('/favicon-32.png')} />
+    <link rel="icon" type="image/png" sizes="16x16" href={withBase('/favicon-16.png')} />
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase('/apple-touch-icon-180.png')} />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
+    {/* Matches the page it's on, so the mobile browser chrome doesn't sit in
+        the dark ground while the about page is white. */}
+    <meta name="theme-color" content={ground} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Luke To" />
