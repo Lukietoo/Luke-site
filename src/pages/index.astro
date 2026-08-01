@@ -47,10 +47,6 @@ const socials = [
 
       <p class="role">{copy.role}</p>
 
-      <p class="building">
-        currently building <span class="what">{copy.buildingNow}</span>
-      </p>
-
       <div class="socials">
         {
           socials.map((s) => (
@@ -185,21 +181,6 @@ const socials = [
     animation: softIn 460ms cubic-bezier(0.2, 0.7, 0.3, 1) 700ms both;
   }
 
-  .building {
-    margin: 12px 0 0;
-    padding: 0 24px;
-    text-align: center;
-    font: 400 13px 'JetBrains Mono', ui-monospace, monospace;
-    color: rgba(255, 255, 255, 0.5);
-    animation: softIn 460ms cubic-bezier(0.2, 0.7, 0.3, 1) 790ms both;
-  }
-
-  /* Lifts the work itself out of the dimmer "currently building" prefix. No
-     hover state — it is not a link until the work has a name to point at. */
-  .building .what {
-    color: rgba(255, 255, 255, 0.88);
-  }
-
   .socials {
     margin-top: 18px;
     display: flex;
@@ -290,10 +271,6 @@ const socials = [
     .role {
       margin-top: 18px;
       font-size: 11px;
-    }
-
-    .building {
-      font-size: 11.5px;
     }
 
     .socials {

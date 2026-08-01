@@ -45,11 +45,6 @@ export const links = {
 export const copy = {
   name: 'Luke To',
   role: 'Student @ UC Berkeley & Founder',
-  /**
-   * Landing page: renders as "currently building <this>", unlinked. The work
-   * has no public name yet — when it gets one, this becomes the link text.
-   */
-  buildingNow: 'tools for telling your own story',
   lifeStory: [
     { age: 'AGE 12', text: 'built a working cardboard PC to play video games.' },
     { age: 'AGE 13', text: 'learned how to code and build on Roblox.' },
@@ -58,7 +53,7 @@ export const copy = {
     { age: 'AGE 18', text: 'accepted into UC Berkeley to keep on building.' },
     {
       age: 'AGE 19',
-      text: 'became passionate about storytelling and the best way to tell them.',
+      text: 'became passionate about storytelling. Now studying the best ways to tell them.',
     },
   ] as { age: string; text: string }[],
   beliefs: [
