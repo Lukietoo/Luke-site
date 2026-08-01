@@ -130,7 +130,10 @@ numbers have to change with it.
    own voice. A project with no `intro` falls back to `placeholderIntro`.
    `src/assets/work/*.png` are 1440x900 screenshots captured from the live sites
    at `deviceScaleFactor: 1.5`; re-shoot at those dimensions when a project
-   changes and the `<Image>` tags need no edits.
+   changes and the `<Image>` tags need no edits. The `ants-*` three are the
+   exception — they're the game's own art, cut out of its spec page rather than
+   shots of it, and every well is 16:10, so anything dropped in there wants
+   trimming or padding to that ratio instead of cropping by the `cover`.
 3. **Calendly icon** — currently a neutral calendar glyph in `about.astro`.
    Drop in the official mark from Calendly's brand page when you have it.
 4. **`site` in `astro.config.mjs`** — currently `https://lukietoo.github.io`,

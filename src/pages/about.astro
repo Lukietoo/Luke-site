@@ -256,9 +256,12 @@ const socials = [
     align-items: baseline;
   }
 
-  /* 1fr keeps the value cell from collapsing and wrapping its trailing link away. */
+  /* 1fr keeps the value cell from collapsing and wrapping its trailing link away.
+     Roomier rows than the beliefs list, since the last one wraps to two lines
+     and the rows need to stay distinguishable from each other. */
   .story {
     grid-template-columns: 96px 1fr;
+    row-gap: 18px;
   }
 
   .beliefs {

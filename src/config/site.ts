@@ -46,14 +46,14 @@ export const copy = {
   name: 'Luke To',
   role: 'Student @ UC Berkeley & Founder',
   lifeStory: [
-    { age: 'AGE 12', text: 'built a working cardboard PC to play video games.' },
-    { age: 'AGE 13', text: 'learned how to code and build on Roblox.' },
-    { age: 'AGE 15', text: 'first Roblox game hit 1000 plays.' },
-    { age: 'AGE 17', text: 'started telling stories through code and projects.' },
-    { age: 'AGE 18', text: 'accepted into UC Berkeley to keep on building.' },
+    { age: 'AGE 12', text: 'built a working cardboard PC to play video games' },
+    { age: 'AGE 13', text: 'learned how to code and build on Roblox' },
+    { age: 'AGE 15', text: 'first Roblox game hit 1000 plays' },
+    { age: 'AGE 17', text: 'started telling stories through code and projects' },
+    { age: 'AGE 18', text: 'accepted into UC Berkeley to keep on building' },
     {
       age: 'AGE 19',
-      text: 'became passionate about storytelling. Now studying the best ways to tell them.',
+      text: 'became passionate about storytelling. Now studying the best ways to tell them',
     },
   ] as { age: string; text: string }[],
   beliefs: [

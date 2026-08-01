@@ -5,7 +5,7 @@ import ChromeBar from '../../components/ChromeBar.astro';
 import { withBase } from '../../config/site';
 import {
   openProjects,
-  placeholderIntro,
+  introParagraphs,
   caseNumber,
   nextOpen,
   displayUrl,
@@ -55,7 +55,7 @@ const poster = video
     <div class="col">
       <p class="eyebrow">case {caseNumber(project)} — {project.role}</p>
       <h1 class="title">{project.name}</h1>
-      <p class="intro">{project.intro ?? placeholderIntro}</p>
+      {introParagraphs(project).map((line) => <p class="intro">{line}</p>)}
 
       {/* Unit line-heights so the mono labels share a baseline with the values. */}
       <dl class="meta">
@@ -209,11 +209,17 @@ const poster = video
   .intro {
     margin: 18px 0 0;
     /* Runs the full column rather than the narrower measure it used to keep —
-       the intro is three sentences, so the long line costs less than the extra
+       an opener is a few sentences, so the long line costs less than the extra
        wraps did. */
     font: 400 16px/1.65 Helvetica, 'Helvetica Neue', Arial, sans-serif;
     color: rgba(0, 0, 0, 0.68);
     text-wrap: pretty;
+  }
+
+  /* Tighter between paragraphs than under the title, so a write-up that runs
+     to several still reads as one block. */
+  .intro + .intro {
+    margin-top: 13px;
   }
 
   .meta {

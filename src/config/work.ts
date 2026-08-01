@@ -14,9 +14,13 @@ import paperTraderCard from '../assets/work/paper-trader-card.png';
 import paperTraderA from '../assets/work/paper-trader-a.png';
 import paperTraderB from '../assets/work/paper-trader-b.png';
 import paperTraderC from '../assets/work/paper-trader-c.png';
-import antsA from '../assets/work/ants-a.png';
-import antsB from '../assets/work/ants-b.png';
-import antsC from '../assets/work/ants-c.png';
+// Ants shows the project's own art rather than screenshots of its spec page:
+// the title illustration and the AntColony figure were cut out of full-page
+// grabs of cs61a.org/proj/ants, and the GUI is the first frame of that page's
+// animated screenshot.gif. All three are trimmed to the wells' 16:10.
+import antsArt from '../assets/work/ants-art.png';
+import antsGame from '../assets/work/ants-game.png';
+import antsDiagram from '../assets/work/ants-diagram.png';
 import catsCard from '../assets/work/cats-card.png';
 import catsA from '../assets/work/cats-a.png';
 import catsB from '../assets/work/cats-b.png';
@@ -93,8 +97,12 @@ export interface Project {
    * still needs all three stills.
    */
   video?: Video;
-  /** Per-project case-study opener; falls back to the placeholder below. */
-  intro?: string;
+  /**
+   * Per-project case-study opener; falls back to the placeholder below. An
+   * array is one paragraph per entry, for a project with more to say than an
+   * opener — read it through `introParagraphs`, which normalises both shapes.
+   */
+  intro?: string | string[];
   /** Per-project link-preview card; falls back to the site-wide one. */
   share?: Share;
 }
@@ -131,8 +139,12 @@ export const projects: Project[] = [
     cardAlt:
       'Paper Trading card — a hand-lettered headline beside a paper receipt of the day’s trades',
     shots: [paperTraderA, paperTraderB, paperTraderC],
-    intro:
-      'An early, experimental mockup of a paper-trading dashboard, inspired by a popular GitHub repo for an AI trading agent. The goal was an easy-to-read interface for following paper trades over time: portfolio value and P&L up top, then positions and a full activity log behind their own tabs.',
+    intro: [
+      'An early mockup for a paper-trading dashboard, inspired by a popular GitHub repo for an AI trading agent. I wanted it to look less like a Bloomberg terminal and more like a ledger someone actually keeps by hand: sketchy grid lines, a bit of paper texture, hand-lettering, a receipt-style summary for the day’s numbers.',
+      'The main question was what to show first. Portfolio value and P&L sit at the top, since that’s the number you actually check in for. Positions and the full activity log are tucked behind their own tabs so they don’t compete with it.',
+      'The palette is warm clay and off-white paper, with a light sketch filter on the borders and outlines. Numbers stay crisp and readable. Gains and losses use a simple green and red instead of the loud, flashing colors most trading apps use. Still an early exploration, not a finished product. Mostly about finding a visual style for a trading tool that didn’t look like every other trading tool.',
+      'In the future I’ll be hooking up Alpaca API keys in order to set up an actual AI trading agent that can work and show results through this dashboard!',
+    ],
     // Built from the "Clay grid" handoff — source in scripts/og-paper-trader.html.
     share: {
       image: '/og-paper-trader.png',
@@ -151,8 +163,11 @@ export const projects: Project[] = [
     card: catsCard,
     cardAlt: 'CATS card — the name spelled out across four keycaps beside a cat-eared key',
     shots: [catsA, catsB, catsC],
-    intro:
-      'Computer Aided Typing Software: a typing test that measures words per minute and accuracy against a generated passage, with an autocorrect option that suggests the intended word from a small edit distance. Built for CS 61A at Berkeley.',
+    intro: [
+      'CATS stands for Computer Aided Typing Software. You type against a generated passage while it tracks words per minute and accuracy in real time, then breaks down where you slowed down or made mistakes once you’re done.',
+      'Additionally, typos are flagged and it’ll suggest the closest match by using edit distance to find real words within a small number of insertions, deletions, or swaps from what you typed. Type “wrold” and it’ll catch that you meant “world” without breaking your stride.',
+      'Built as coursework for CS 61A at Berkeley. The site linked is a demo of the website hosted by course staff, however the logic of the website is my own implementation. Project design and starter framework are by the CS 61A course staff; the typing logic and autocorrect implementation are my own work.',
+    ],
     share: {
       image: '/og-cats.png',
       imageAlt:
@@ -189,12 +204,12 @@ export const projects: Project[] = [
     role: 'build',
     url: 'https://cs61a.org/proj/ants/',
     slug: 'ants',
-    shots: [antsA, antsB, antsC],
+    shots: [antsArt, antsGame, antsDiagram],
     // Drop a recording in here once there's one to show — it takes over the
     // hero frame and `shots[0]` becomes its poster:
     //   video: { src: '/work/ants-demo.mp4', alt: 'a round of Ants Vs. SomeBees' }
     intro:
-      'A tower-defense game in Python, built as the object-oriented programming project for CS 61A at Berkeley. Ants defend a colony against invading bees, and each new ant type is a subclass that bends one rule of the base behaviour — so the work is mostly in getting the inheritance hierarchy to carry its weight.',
+      "A tower-defense game built entirely on inheritance, implemented for CS 61A: Structure and Interpretation of Computer Programs at UC Berkeley. The project spec and base game framework (Ants vs. SomeBees) were designed by the CS 61A course staff; I implemented the full logic layer which included the insect class hierarchy, combat resolution, and status effects. Every ant type (Thrower, Fire, Hedge, Ninja, Wall, Queen) is a subclass that overrides exactly one piece of the base Ant's behavior, so the real work was designing a hierarchy clean enough that adding a wildly different ant meant changing a few lines.",
   },
 ];
 
@@ -222,6 +237,16 @@ export const openProjects = projects.filter((p): p is OpenProject => !p.locked);
 /** The live URL as it reads in copy: no protocol, no trailing slash. */
 export function displayUrl(project: OpenProject): string {
   return project.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+}
+
+/**
+ * A project's opener as paragraphs, whichever shape it was written in. Every
+ * case study renders one `<p>` per entry, so a project that only has a sentence
+ * still comes back as a list of one.
+ */
+export function introParagraphs(project: Project): string[] {
+  const intro = project.intro ?? placeholderIntro;
+  return Array.isArray(intro) ? intro : [intro];
 }
 
 /** Zero-padded position in `projects` — the `CASE 0N` eyebrow. */
