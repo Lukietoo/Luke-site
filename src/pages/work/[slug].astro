@@ -151,44 +151,11 @@ const poster = video
 
 <style>
   .page {
-    position: relative;
     padding: 84px 44px 100px;
-    min-height: 100vh;
-    box-sizing: border-box;
-    background: #eef1ee;
-    animation: fadeup 0.35s ease both;
-  }
-
-  .back {
-    position: absolute;
-    top: 34px;
-    left: 34px;
-    z-index: 20;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.06);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font: 700 15px Helvetica, 'Helvetica Neue', Arial, sans-serif;
-    color: #1a1a1a;
-    text-decoration: none;
-  }
-
-  .back:hover {
-    background: rgba(0, 0, 0, 0.12);
-    color: #1a1a1a;
-  }
-
-  .back:focus-visible {
-    outline: 2px solid rgba(0, 0, 0, 0.45);
-    outline-offset: 2px;
   }
 
   .col {
     max-width: 900px;
-    margin: 0 auto;
   }
 
   .eyebrow {
@@ -300,23 +267,10 @@ const poster = video
     background: #fff;
   }
 
-  .well {
-    position: relative;
-    aspect-ratio: 16 / 10;
-    background: #e6e9e5;
-  }
-
   .detail {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     overflow: hidden;
-  }
-
-  .shot {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
   }
 
   /* Recordings are letterboxed, not cropped. A screenshot survives losing its

@@ -105,6 +105,69 @@ a:hover {
   color: #2a78d6;
 }
 
+/*
+ * The shell every inner page is built from — about, the work grid and the case
+ * studies were carrying their own identical copies of these, which had already
+ * started to drift. What actually differs per page stays in that page's own
+ * <style>: `.page` padding, `.col` width, and whether a `.well` clips.
+ * Astro's scoped selectors outrank these, so those overrides need nothing else.
+ */
+.page {
+  position: relative;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background: #eef1ee;
+  animation: fadeup 0.35s ease both;
+}
+
+.col {
+  margin: 0 auto;
+}
+
+/* The round affordance in the top-left corner: "L" home, or an arrow back up
+   one level. An anchor on all three pages, so it needs no button resets. */
+.back {
+  position: absolute;
+  top: 34px;
+  left: 34px;
+  z-index: 20;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 15px Helvetica, 'Helvetica Neue', Arial, sans-serif;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.back:hover {
+  background: rgba(0, 0, 0, 0.12);
+  color: #1a1a1a;
+}
+
+.back:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.45);
+  outline-offset: 2px;
+}
+
+/* Screenshot wells: fixed 16:10 so a card's shape never depends on what's
+   dropped in it, and the image fills that shape. */
+.well {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: #e6e9e5;
+}
+
+.shot {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

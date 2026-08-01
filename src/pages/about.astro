@@ -19,7 +19,9 @@ const socials = [
   ground="#eef1ee"
 >
   <div class="page">
-    <button class="back" id="back" type="button" aria-label="Back to home">L</button>
+    {/* Going back is an instant swap with no whiteout — deliberately
+        asymmetric with the landing's transition into this page. */}
+    <a class="back" href={withBase('/')} aria-label="Back to home">L</a>
 
     <div class="col">
       <header class="head">
@@ -128,45 +130,12 @@ const socials = [
 
 <style>
   .page {
-    position: relative;
     padding: 52px 0 90px;
-    min-height: 100vh;
-    box-sizing: border-box;
-    background: #eef1ee;
-    animation: fadeup 0.35s ease both;
-  }
-
-  .back {
-    position: absolute;
-    top: 34px;
-    left: 34px;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border: none;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.06);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font: 700 15px Helvetica, 'Helvetica Neue', Arial, sans-serif;
-    color: #1a1a1a;
-    cursor: pointer;
-  }
-
-  .back:hover {
-    background: rgba(0, 0, 0, 0.12);
-  }
-
-  .back:focus-visible {
-    outline: 2px solid rgba(0, 0, 0, 0.45);
-    outline-offset: 2px;
   }
 
   /* The column centers as a block; the text inside does not center. */
   .col {
     max-width: 620px;
-    margin: 0 auto;
   }
 
   .head {
@@ -364,12 +333,3 @@ const socials = [
     }
   }
 </style>
-
-<script>
-  import { withBase } from '../config/site';
-
-  // Going back is an instant swap with no whiteout — deliberately asymmetric.
-  document.getElementById('back')?.addEventListener('click', () => {
-    window.location.href = withBase('/');
-  });
-</script>
